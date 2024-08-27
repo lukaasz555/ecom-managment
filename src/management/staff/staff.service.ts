@@ -7,6 +7,7 @@ import {
 import { CreateStaffMemberDto } from './dto/CreateStaffMemberDto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { StaffMemberDto } from './dto/StaffMemberDto';
+import { getPrivilegesDifference } from './helpers/getPrivilegesDifference';
 
 @Injectable()
 export class StaffService {
@@ -35,27 +36,27 @@ export class StaffService {
   async createStaffMember(
     createStaffMemberDto: CreateStaffMemberDto,
   ): Promise<StaffMemberDto> {
-    try {
-      const newStaff = await this._prismaService.staff.create({
-        data: {
-          name: createStaffMemberDto.name,
-          lastname: createStaffMemberDto.lastname,
-          email: createStaffMemberDto.email,
-          password: createStaffMemberDto.password,
-          phone: createStaffMemberDto.phone,
-          privileges: createStaffMemberDto.privileges,
-          role: createStaffMemberDto.role,
-        },
-      });
-      return new StaffMemberDto(newStaff);
-    } catch (err) {
-      if (err.code === 'P2002') {
-        throw new HttpException('Email already exists', HttpStatus.CONFLICT);
-      }
+    const diff = getPrivilegesDifference(createStaffMemberDto.privileges);
+
+    if (diff.length > 0) {
       throw new HttpException(
-        'Internal server error',
-        HttpStatus.INTERNAL_SERVER_ERROR,
+        `Privileges are missing: ${diff.join(', ')}`,
+        HttpStatus.BAD_REQUEST,
       );
     }
+
+    const staff = await this._prismaService.staff.create({
+      data: {
+        name: createStaffMemberDto.name,
+        lastname: createStaffMemberDto.lastname,
+        email: createStaffMemberDto.email,
+        password: createStaffMemberDto.password,
+        phone: createStaffMemberDto.phone,
+        privileges: createStaffMemberDto.privileges,
+        role: createStaffMemberDto.role,
+      },
+    });
+
+    return new StaffMemberDto(staff);
   }
 }
