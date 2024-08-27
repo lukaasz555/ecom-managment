@@ -1,30 +1,28 @@
 import {
   IsEmail,
   IsNotEmpty,
-  IsObject,
   IsString,
   IsStrongPassword,
 } from 'class-validator';
 import { RolesEnum } from 'src/enums';
-import { PrivilegesType } from 'src/management/types/Privileges.type';
 
 export class CreateStaffMemberDto {
   @IsString()
   @IsNotEmpty()
-  name: string;
+  readonly name: string;
 
   @IsString()
   @IsNotEmpty()
-  lastname: string;
+  readonly lastname: string;
 
   @IsString()
   @IsNotEmpty()
   @IsEmail()
-  email: string;
+  readonly email: string;
 
   @IsString()
   @IsNotEmpty()
-  phone: string;
+  readonly phone: string;
 
   @IsString()
   @IsStrongPassword({
@@ -34,12 +32,9 @@ export class CreateStaffMemberDto {
     minNumbers: 1,
     minSymbols: 1,
   })
-  password: string;
-
-  @IsObject()
-  privileges: PrivilegesType;
+  readonly password: string;
 
   @IsString()
   @IsNotEmpty()
-  role: RolesEnum;
+  readonly role: RolesEnum;
 }

@@ -8,6 +8,8 @@ import { CreateStaffMemberDto } from './dto/CreateStaffMemberDto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { StaffMemberDto } from './dto/StaffMemberDto';
 import { getPrivilegesDifference } from './helpers/getPrivilegesDifference';
+import { PrivilegesType } from '../types/Privileges.type';
+import { getBasePrivileges } from './helpers/getBasePrivileges';
 
 @Injectable()
 export class StaffService {
@@ -36,27 +38,40 @@ export class StaffService {
   async createStaffMember(
     createStaffMemberDto: CreateStaffMemberDto,
   ): Promise<StaffMemberDto> {
-    const diff = getPrivilegesDifference(createStaffMemberDto.privileges);
+    // this._validatePrivileges(createStaffMemberDto.privileges);
 
+    try {
+      const staff = await this._prismaService.staff.create({
+        data: {
+          name: createStaffMemberDto.name,
+          lastname: createStaffMemberDto.lastname,
+          email: createStaffMemberDto.email,
+          password: createStaffMemberDto.password,
+          phone: createStaffMemberDto.phone,
+          privileges: getBasePrivileges(createStaffMemberDto.role),
+          role: createStaffMemberDto.role,
+        },
+      });
+
+      return new StaffMemberDto(staff);
+    } catch (err) {
+      if (err.code === 'P2002') {
+        throw new HttpException('Email already exists', HttpStatus.BAD_REQUEST);
+      }
+      throw new HttpException(
+        'Internal server error',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+  }
+
+  private _validatePrivileges(privileges: PrivilegesType): void {
+    const diff = getPrivilegesDifference(privileges);
     if (diff.length > 0) {
       throw new HttpException(
         `Privileges are missing: ${diff.join(', ')}`,
         HttpStatus.BAD_REQUEST,
       );
     }
-
-    const staff = await this._prismaService.staff.create({
-      data: {
-        name: createStaffMemberDto.name,
-        lastname: createStaffMemberDto.lastname,
-        email: createStaffMemberDto.email,
-        password: createStaffMemberDto.password,
-        phone: createStaffMemberDto.phone,
-        privileges: createStaffMemberDto.privileges,
-        role: createStaffMemberDto.role,
-      },
-    });
-
-    return new StaffMemberDto(staff);
   }
 }
