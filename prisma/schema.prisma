@@ -1,6 +1,5 @@
 generator client {
   provider = "prisma-client-js"
-  schema   = env("DATABASE_SCHEMA")
 }
 
 datasource db {
