@@ -1,10 +1,14 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import { LoggerModule } from 'nestjs-pino';
+import { StoreModule } from './store/store.module';
+import { ConfigModule } from '@nestjs/config';
+import { ManagementModule } from './management/management.module';
 
 @Module({
   imports: [
+    ConfigModule.forRoot({
+      isGlobal: true,
+    }),
     LoggerModule.forRoot({
       pinoHttp: {
         transport: {
@@ -15,8 +19,10 @@ import { LoggerModule } from 'nestjs-pino';
         },
       },
     }),
+    ManagementModule,
+    StoreModule,
   ],
-  controllers: [AppController],
-  providers: [AppService],
+  controllers: [],
+  providers: [],
 })
 export class AppModule {}
