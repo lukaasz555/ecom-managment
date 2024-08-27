@@ -2,7 +2,7 @@ import { Staff } from '@prisma/client';
 import { RolesEnum } from 'src/enums';
 import { Privileges } from 'src/management/types/Privileges';
 
-export class GetStaffMemberDto {
+export class StaffMemberDto {
   id: number;
   name: string;
   lastname: string;
