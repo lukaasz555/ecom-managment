@@ -6,7 +6,7 @@ import {
   IsStrongPassword,
 } from 'class-validator';
 import { RolesEnum } from 'src/enums';
-import { Privileges } from 'src/management/types/Privileges';
+import { PrivilegesType } from 'src/management/types/Privileges.type';
 
 export class CreateStaffMemberDto {
   @IsString()
@@ -37,7 +37,7 @@ export class CreateStaffMemberDto {
   password: string;
 
   @IsObject()
-  privileges: Privileges;
+  privileges: PrivilegesType;
 
   @IsString()
   @IsNotEmpty()
