@@ -10,6 +10,7 @@ import { StaffMemberDto } from './dto/StaffMemberDto';
 import { getPrivilegesDifference } from './helpers/getPrivilegesDifference';
 import { PrivilegesType } from '../types/Privileges.type';
 import { getBasePrivileges } from './helpers/getBasePrivileges';
+import { getHashedPassword } from 'src/helpers/bcrypt.helpers';
 
 @Injectable()
 export class StaffService {
@@ -41,12 +42,15 @@ export class StaffService {
     // this._validatePrivileges(createStaffMemberDto.privileges);
 
     try {
+      const hashedPassword = await getHashedPassword(
+        createStaffMemberDto.password,
+      );
       const staff = await this._prismaService.staff.create({
         data: {
           name: createStaffMemberDto.name,
           lastname: createStaffMemberDto.lastname,
           email: createStaffMemberDto.email,
-          password: createStaffMemberDto.password,
+          password: hashedPassword,
           phone: createStaffMemberDto.phone,
           privileges: getBasePrivileges(createStaffMemberDto.role),
           role: createStaffMemberDto.role,
