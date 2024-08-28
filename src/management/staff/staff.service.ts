@@ -35,11 +35,40 @@ export class StaffService {
     return new StaffMemberDto(staffMember);
   }
 
+  async updatePrivileges(
+    staffMemberId: number,
+    privileges: PrivilegesType,
+  ): Promise<void> {
+    this._validatePrivileges(privileges);
+
+    // TODO: add validator #later
+    // 1. retrieve from headers id of user that makes the call
+    // 2. check if this user is allowed to update privileges
+    // 3. if yes, check privileges (e.g. Manager cannot update Admin privileges, Assistant cannot have higher privilege than readonly in StaffMembers etc. There is a lot to think about here)
+    // 4. proceed with the update if everything is ok
+
+    const staffMember = await this._prismaService.staff.findFirstOrThrow({
+      where: {
+        id: staffMemberId,
+      },
+    });
+    if (!staffMember) {
+      throw new NotFoundException('Staff member not found');
+    }
+
+    await this._prismaService.staff.update({
+      where: {
+        id: staffMemberId,
+      },
+      data: {
+        privileges,
+      },
+    });
+  }
+
   async createStaffMember(
     createStaffMemberDto: CreateStaffMemberDto,
   ): Promise<StaffMemberDto> {
-    // this._validatePrivileges(createStaffMemberDto.privileges);
-
     try {
       const staffMemberFactory = new StaffMemberFactory();
       const newStaffMember =
