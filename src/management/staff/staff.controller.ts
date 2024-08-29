@@ -3,7 +3,7 @@ import { StaffService } from './staff.service';
 import { ApiTags } from '@nestjs/swagger';
 import { CreateStaffMemberDto } from './dto/CreateStaffMember.dto';
 import { StaffMemberDto } from './dto/StaffMember.dto';
-import { PrivilegesType } from '../types/Privileges.type';
+import { PrivilegesType } from '../types';
 
 @ApiTags('management/staff')
 @Controller('management/staff')

@@ -1,7 +1,7 @@
 import { Staff } from '@prisma/client';
 import { RolesEnum } from 'src/enums';
 import { Privileges } from 'src/management/models/Privileges';
-import { PrivilegesType } from 'src/management/types/Privileges.type';
+import { PrivilegesType } from 'src/management/types';
 
 export class StaffMemberDto {
   id: number;
