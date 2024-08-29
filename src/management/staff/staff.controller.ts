@@ -1,8 +1,8 @@
 import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { StaffService } from './staff.service';
 import { ApiTags } from '@nestjs/swagger';
-import { CreateStaffMemberDto } from './dto/CreateStaffMemberDto';
-import { StaffMemberDto } from './dto/StaffMemberDto';
+import { CreateStaffMemberDto } from './dto/CreateStaffMember.dto';
+import { StaffMemberDto } from './dto/StaffMember.dto';
 import { PrivilegesType } from '../types/Privileges.type';
 
 @ApiTags('management/staff')

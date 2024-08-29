@@ -4,9 +4,9 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { CreateStaffMemberDto } from './dto/CreateStaffMemberDto';
+import { CreateStaffMemberDto } from './dto/CreateStaffMember.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { StaffMemberDto } from './dto/StaffMemberDto';
+import { StaffMemberDto } from './dto/StaffMember.dto';
 import { getPrivilegesDifference } from './helpers/getPrivilegesDifference';
 import { PrivilegesType } from '../types/Privileges.type';
 import { StaffMemberFactory } from './factories/StaffMemberFactory';
