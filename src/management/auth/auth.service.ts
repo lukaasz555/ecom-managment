@@ -1,18 +1,21 @@
 import {
-  HttpException,
-  HttpStatus,
   Injectable,
   NotFoundException,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { SignInDto } from './dto/SignIn.dto';
 import { validatePassword } from 'src/helpers/bcrypt.helpers';
+import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class AuthService {
-  constructor(private readonly _prismaService: PrismaService) {}
+  constructor(
+    private readonly _prismaService: PrismaService,
+    private readonly _jwtService: JwtService,
+  ) {}
 
-  async signIn(signInDto: SignInDto): Promise<string> {
+  async signIn(signInDto: SignInDto): Promise<{ token: string }> {
     const staffMember = await this._prismaService.staff.findUnique({
       where: {
         email: signInDto.email,
@@ -29,9 +32,16 @@ export class AuthService {
     );
 
     if (!isValidPassword) {
-      throw new HttpException('Invalid password', HttpStatus.UNAUTHORIZED);
+      throw new UnauthorizedException('Invalid password');
     }
 
-    return 'TODO: generate jwt token';
+    const payload = {
+      id: staffMember.id,
+      email: staffMember.email,
+      role: staffMember.role,
+      privileges: staffMember.privileges,
+    };
+    const token = await this._jwtService.signAsync(payload);
+    return { token };
   }
 }
