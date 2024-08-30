@@ -1,12 +1,14 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
 import { StaffService } from './staff.service';
 import { ApiTags } from '@nestjs/swagger';
 import { CreateStaffMemberDto } from './dto/CreateStaffMember.dto';
 import { StaffMemberDto } from './dto/StaffMember.dto';
 import { PrivilegesType } from '../types';
+import { RoleGuard } from '../guards/RoleGuard';
 
 @ApiTags('management/staff')
 @Controller('management/staff')
+@UseGuards(RoleGuard)
 export class StaffController {
   constructor(private readonly _staffService: StaffService) {}
 
