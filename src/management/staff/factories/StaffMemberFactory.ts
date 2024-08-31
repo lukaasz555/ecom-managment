@@ -1,8 +1,8 @@
 import { Prisma } from '@prisma/client';
 import { RolesEnum } from 'src/enums';
-import { getHashedPassword } from 'src/helpers/bcrypt.helpers';
 import { CreateStaffMemberDto } from '../dto/CreateStaffMember.dto';
 import { getBasePrivileges } from '../helpers';
+import { getHashedPassword } from 'src/helpers';
 
 export class StaffMemberFactory {
   public createStaffMember(

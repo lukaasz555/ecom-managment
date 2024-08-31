@@ -5,8 +5,8 @@ import {
 } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { SignInDto } from './dto/SignIn.dto';
-import { validatePassword } from 'src/helpers/bcrypt.helpers';
 import { JwtService } from '@nestjs/jwt';
+import { validatePassword } from 'src/helpers';
 
 @Injectable()
 export class AuthService {

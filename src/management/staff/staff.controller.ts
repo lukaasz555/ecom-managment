@@ -1,4 +1,12 @@
-import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Patch,
+  Post,
+  UseGuards,
+} from '@nestjs/common';
 import { StaffService } from './staff.service';
 import { ApiTags } from '@nestjs/swagger';
 import { CreateStaffMemberDto } from './dto/CreateStaffMember.dto';
@@ -22,7 +30,7 @@ export class StaffController {
     return this._staffService.getStaffMember(Number(memberId));
   }
 
-  @Post('updatePrivileges/:id')
+  @Patch('updatePrivileges/:id')
   updatePrivileges(
     @Param('id') memberId: number,
     @Body() privileges: PrivilegesType,
