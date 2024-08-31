@@ -1,10 +1,9 @@
 import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 import { Observable } from 'rxjs';
-import { mapControllerToModuleName } from 'src/helpers/mapControllerToModuleName';
 import { RolesEnum } from 'src/enums';
 import { PrivilegesType } from '../types';
-import { isPrivelegeSufficient } from 'src/helpers';
 import { ManagementPermissionsService } from '../permissions/managementPermissions.service';
+import { isPrivelegeSufficient, mapControllerToModuleName } from '../helpers';
 
 @Injectable()
 export class PermissionsGuard implements CanActivate {
@@ -23,22 +22,19 @@ export class PermissionsGuard implements CanActivate {
       role: RolesEnum;
     };
 
-    console.log('user data in role guard: ', userData);
-
-    const permissions = this._permissionsService.getPermissions(
+    const permission = this._permissionsService.getPermission(
       moduleName,
       methodName,
     );
-    console.log('and permissions: ', permissions);
 
-    if (!permissions.allowedRoles.includes(userData.role)) {
+    if (!permission.allowedRoles.includes(userData.role)) {
       return false;
     }
 
     const userPrivilege = userData.privileges[moduleName];
     const hasAccess = isPrivelegeSufficient(
       userPrivilege,
-      permissions.requiredPrivelege,
+      permission.requiredPrivelege,
     );
 
     return hasAccess;

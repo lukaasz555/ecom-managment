@@ -5,20 +5,20 @@ import { staffPermissions } from './data/staff.permission';
 
 @Injectable()
 export class ManagementPermissionsService {
-  private readonly staffPermisions = staffPermissions;
+  private readonly _staffPermisions = staffPermissions;
 
   constructor() {}
 
   private getPermissionsForModule(moduleName: string) {
     switch (moduleName) {
       case ModulesEnum.STAFF_MEMBERS:
-        return this.staffPermisions;
+        return this._staffPermisions;
       default:
         return [];
     }
   }
 
-  getPermissions(moduleName: string, handlerName: string): IPermission {
+  getPermission(moduleName: string, handlerName: string): IPermission {
     const module = this.getPermissionsForModule(moduleName);
     const permission = module.find((m) => m.methodName === handlerName);
 
