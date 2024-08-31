@@ -1,4 +1,4 @@
-import { PrivilegesEnum } from 'src/enums';
+import { PrivilegesEnum } from '@src/enums';
 
 export function isPrivelegeSufficient(
   userPrivelege: PrivilegesEnum,
