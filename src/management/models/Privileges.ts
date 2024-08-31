@@ -1,6 +1,5 @@
 import { ModulesEnum, PrivilegesEnum } from 'src/enums';
 import { PrivilegesType } from '../types';
-
 export class Privileges {
   [ModulesEnum.CUSTOMERS] = PrivilegesEnum.NOT_ALLOWED;
   [ModulesEnum.STAFF_MEMBERS] = PrivilegesEnum.NOT_ALLOWED;
@@ -10,6 +9,8 @@ export class Privileges {
   [ModulesEnum.SETTINGS] = PrivilegesEnum.NOT_ALLOWED;
   [ModulesEnum.DISCOUNTS] = PrivilegesEnum.NOT_ALLOWED;
   [ModulesEnum.PAYMENTS] = PrivilegesEnum.NOT_ALLOWED;
+  [ModulesEnum.AUTH] = PrivilegesEnum.NOT_ALLOWED;
+  [ModulesEnum.ACCOUNT] = PrivilegesEnum.NOT_ALLOWED;
 
   setPrivileges(privileges: this): void {
     Object.keys(privileges).forEach((key) => {

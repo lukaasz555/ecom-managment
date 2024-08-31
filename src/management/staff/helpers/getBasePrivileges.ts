@@ -13,6 +13,8 @@ export const getBasePrivileges = (role: RolesEnum): PrivilegesType => {
         [ModulesEnum.SETTINGS]: PrivilegesEnum.FULL,
         [ModulesEnum.STAFF_MEMBERS]: PrivilegesEnum.FULL,
         [ModulesEnum.PAYMENTS]: PrivilegesEnum.FULL,
+        [ModulesEnum.AUTH]: PrivilegesEnum.FULL,
+        [ModulesEnum.ACCOUNT]: PrivilegesEnum.FULL,
       };
       return adminRoles;
     case RolesEnum.MANAGER:
@@ -25,6 +27,8 @@ export const getBasePrivileges = (role: RolesEnum): PrivilegesType => {
         [ModulesEnum.SETTINGS]: PrivilegesEnum.READONLY,
         [ModulesEnum.STAFF_MEMBERS]: PrivilegesEnum.MANAGE,
         [ModulesEnum.PAYMENTS]: PrivilegesEnum.MANAGE,
+        [ModulesEnum.AUTH]: PrivilegesEnum.NOT_ALLOWED,
+        [ModulesEnum.ACCOUNT]: PrivilegesEnum.NOT_ALLOWED,
       };
       return managerRoles;
     case RolesEnum.ASSISTANT:
@@ -37,6 +41,8 @@ export const getBasePrivileges = (role: RolesEnum): PrivilegesType => {
         [ModulesEnum.SETTINGS]: PrivilegesEnum.READONLY,
         [ModulesEnum.STAFF_MEMBERS]: PrivilegesEnum.NOT_ALLOWED,
         [ModulesEnum.PAYMENTS]: PrivilegesEnum.READONLY,
+        [ModulesEnum.AUTH]: PrivilegesEnum.NOT_ALLOWED,
+        [ModulesEnum.ACCOUNT]: PrivilegesEnum.NOT_ALLOWED,
       };
       return assistantRoles;
   }

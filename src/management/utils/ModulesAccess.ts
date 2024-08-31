@@ -26,4 +26,10 @@ export const ModulesAccess: ModuleAccessType = {
   [ModulesEnum.SETTINGS]: {
     minimumRole: RolesEnum.ASSISTANT,
   },
+  [ModulesEnum.ACCOUNT]: {
+    minimumRole: RolesEnum.ASSISTANT,
+  },
+  [ModulesEnum.AUTH]: {
+    minimumRole: RolesEnum.ASSISTANT,
+  },
 };
