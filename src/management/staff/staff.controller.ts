@@ -12,11 +12,11 @@ import { ApiTags } from '@nestjs/swagger';
 import { CreateStaffMemberDto } from './dto/CreateStaffMember.dto';
 import { StaffMemberDto } from './dto/StaffMember.dto';
 import { PrivilegesType } from '../types';
-import { RoleGuard } from '../guards/RoleGuard';
+import { PermissionsGuard } from '../guards/PermissionsGuard';
 
 @ApiTags('management/staff')
 @Controller('management/staff')
-@UseGuards(RoleGuard)
+@UseGuards(PermissionsGuard)
 export class StaffController {
   constructor(private readonly _staffService: StaffService) {}
 
