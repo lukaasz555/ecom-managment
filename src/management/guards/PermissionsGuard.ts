@@ -1,9 +1,12 @@
 import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 import { Observable } from 'rxjs';
-import { RolesEnum } from 'src/enums';
-import { PrivilegesType } from '../types';
-import { ManagementPermissionsService } from '../permissions/managementPermissions.service';
-import { isPrivelegeSufficient, mapControllerToModuleName } from '../helpers';
+import { RolesEnum } from '@src/enums';
+import { PrivilegesType } from '@src/management/types';
+import { ManagementPermissionsService } from '@src/management/permissions/managementPermissions.service';
+import {
+  isPrivelegeSufficient,
+  mapControllerToModuleName,
+} from '@src/management/helpers';
 
 @Injectable()
 export class PermissionsGuard implements CanActivate {

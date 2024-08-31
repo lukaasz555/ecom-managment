@@ -1,4 +1,4 @@
-import { ModulesEnum } from 'src/enums';
+import { ModulesEnum } from '@src/enums';
 
 export const mapControllerToModuleName = (controllerName: string) => {
   switch (controllerName) {

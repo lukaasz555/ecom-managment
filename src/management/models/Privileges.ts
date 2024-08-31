@@ -1,5 +1,5 @@
-import { ModulesEnum, PrivilegesEnum } from 'src/enums';
-import { PrivilegesType } from '../types';
+import { ModulesEnum, PrivilegesEnum } from '@src/enums';
+import { PrivilegesType } from '@src/management/types';
 export class Privileges {
   [ModulesEnum.CUSTOMERS] = PrivilegesEnum.NOT_ALLOWED;
   [ModulesEnum.STAFF_MEMBERS] = PrivilegesEnum.NOT_ALLOWED;
