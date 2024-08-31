@@ -4,10 +4,11 @@ import { AuthModule } from './auth/auth.module';
 import { JwtMiddleware } from './middlewares/jwt.middleware';
 import { JwtService } from '@nestjs/jwt';
 import { StaffController } from './staff/staff.controller';
+import { ManagementPermissionsService } from './permissions/managementPermissions.service';
 
 @Module({
   imports: [StaffModule, AuthModule],
-  providers: [JwtService],
+  providers: [JwtService, ManagementPermissionsService],
 })
 export class ManagementModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
