@@ -9,12 +9,13 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { StaffService } from './staff.service';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiSecurity, ApiTags } from '@nestjs/swagger';
 import { CreateStaffMemberDto } from './dto/create-staff-member.dto';
 import { StaffMemberDto } from './dto/staff-member.dto';
-import { PrivilegesType } from '../types';
 import { PermissionsGuard } from '../guards/permissions-guard';
+import { UpdatePrivilegesDto } from './dto/update-privileges.dto';
 
+@ApiSecurity('bearerAuth')
 @ApiTags('management/staff')
 @Controller('management/staff')
 @UseGuards(PermissionsGuard)
@@ -35,7 +36,7 @@ export class StaffController {
   updatePrivileges(
     @Headers('userId') userId: string,
     @Param('id') memberId: string,
-    @Body() privileges: PrivilegesType,
+    @Body() privileges: UpdatePrivilegesDto,
   ): Promise<void> {
     return this._staffService.updatePrivileges(
       Number(userId),

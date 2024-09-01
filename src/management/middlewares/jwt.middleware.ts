@@ -14,7 +14,9 @@ export class JwtMiddleware implements NestMiddleware {
     const token = this.extractTokenFromHeader(req);
 
     if (!token) {
-      return res.status(401).json({ message: 'Unauthorized' });
+      return res
+        .status(401)
+        .json({ message: 'Unauthorized - no token provided' });
     }
 
     try {
@@ -30,6 +32,7 @@ export class JwtMiddleware implements NestMiddleware {
   }
 
   private extractTokenFromHeader(request: Request): string | undefined {
+    console.log('headersss auth ', request.headers.authorization);
     const [type, token] = request.headers.authorization?.split(' ') ?? [];
     return type === 'Bearer' ? token : undefined;
   }
