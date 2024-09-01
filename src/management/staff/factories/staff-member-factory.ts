@@ -1,6 +1,6 @@
 import { Prisma } from '@prisma/client';
 import { RolesEnum } from 'src/enums';
-import { CreateStaffMemberDto } from '../dto/CreateStaffMember.dto';
+import { CreateStaffMemberDto } from '../dto/create-staff-member.dto';
 import { getBasePrivileges } from '../helpers';
 import { getHashedPassword } from 'src/helpers';
 

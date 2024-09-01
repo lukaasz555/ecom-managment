@@ -1,1 +1,1 @@
-export * from './Privileges';
+export * from './privileges';

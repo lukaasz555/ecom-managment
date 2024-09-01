@@ -1,8 +1,8 @@
+import { ManagementPermissionsService } from '@src/management/permissions/management-permissions.service';
 import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 import { Observable } from 'rxjs';
 import { RolesEnum } from '@src/enums';
 import { PrivilegesType } from '@src/management/types';
-import { ManagementPermissionsService } from '@src/management/permissions/managementPermissions.service';
 import {
   isPrivelegeSufficient,
   mapControllerToModuleName,

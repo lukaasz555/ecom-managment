@@ -4,7 +4,7 @@ import { AuthModule } from './auth/auth.module';
 import { JwtMiddleware } from './middlewares/jwt.middleware';
 import { JwtService } from '@nestjs/jwt';
 import { StaffController } from './staff/staff.controller';
-import { ManagementPermissionsService } from './permissions/managementPermissions.service';
+import { ManagementPermissionsService } from './permissions/management-permissions.service';
 
 @Module({
   imports: [StaffModule, AuthModule],

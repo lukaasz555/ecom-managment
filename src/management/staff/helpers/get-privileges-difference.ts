@@ -1,5 +1,5 @@
 import { difference } from 'lodash';
-import { Privileges } from '@src/management/models/Privileges';
+import { Privileges } from '@src/management/models/privileges';
 import { PrivilegesType } from '@src/management/types';
 
 export const getPrivilegesDifference = (privileges: PrivilegesType) => {

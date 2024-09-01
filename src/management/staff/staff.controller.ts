@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   Get,
+  Headers,
   Param,
   Patch,
   Post,
@@ -9,10 +10,10 @@ import {
 } from '@nestjs/common';
 import { StaffService } from './staff.service';
 import { ApiTags } from '@nestjs/swagger';
-import { CreateStaffMemberDto } from './dto/CreateStaffMember.dto';
-import { StaffMemberDto } from './dto/StaffMember.dto';
+import { CreateStaffMemberDto } from './dto/create-staff-member.dto';
+import { StaffMemberDto } from './dto/staff-member.dto';
 import { PrivilegesType } from '../types';
-import { PermissionsGuard } from '../guards/PermissionsGuard';
+import { PermissionsGuard } from '../guards/permissions-guard';
 
 @ApiTags('management/staff')
 @Controller('management/staff')
@@ -32,10 +33,15 @@ export class StaffController {
 
   @Patch('updatePrivileges/:id')
   updatePrivileges(
-    @Param('id') memberId: number,
+    @Headers('userId') userId: string,
+    @Param('id') memberId: string,
     @Body() privileges: PrivilegesType,
   ): Promise<void> {
-    return this._staffService.updatePrivileges(Number(memberId), privileges);
+    return this._staffService.updatePrivileges(
+      Number(userId),
+      Number(memberId),
+      privileges,
+    );
   }
 
   @Post()

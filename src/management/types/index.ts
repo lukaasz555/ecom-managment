@@ -1,2 +1,2 @@
-export * from './ModuleAccess.type';
-export * from './Privileges.type';
+export * from './module-access.type';
+export * from './privileges.type';
