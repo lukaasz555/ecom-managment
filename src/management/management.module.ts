@@ -1,7 +1,18 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { StaffModule } from './staff/staff.module';
+import { AuthModule } from './auth/auth.module';
+import { JwtMiddleware } from './middlewares/jwt.middleware';
+import { JwtService } from '@nestjs/jwt';
+import { StaffController } from './staff/staff.controller';
+import { ManagementPermissionsService } from './permissions/management-permissions.service';
 
 @Module({
-  imports: [StaffModule],
+  imports: [StaffModule, AuthModule],
+  providers: [JwtService, ManagementPermissionsService],
 })
-export class ManagementModule {}
+export class ManagementModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    // TODO: Apply JwtMiddleware to all routes expect auth - instead of writing the same code for each controller
+    consumer.apply(JwtMiddleware).exclude('auth/*').forRoutes(StaffController);
+  }
+}

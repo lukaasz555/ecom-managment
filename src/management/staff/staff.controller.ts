@@ -1,12 +1,24 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Headers,
+  Param,
+  Patch,
+  Post,
+  UseGuards,
+} from '@nestjs/common';
 import { StaffService } from './staff.service';
-import { ApiTags } from '@nestjs/swagger';
-import { CreateStaffMemberDto } from './dto/CreateStaffMemberDto';
-import { StaffMemberDto } from './dto/StaffMemberDto';
-import { PrivilegesType } from '../types/Privileges.type';
+import { ApiSecurity, ApiTags } from '@nestjs/swagger';
+import { CreateStaffMemberDto } from './dto/create-staff-member.dto';
+import { StaffMemberDto } from './dto/staff-member.dto';
+import { PermissionsGuard } from '../guards/permissions-guard';
+import { UpdatePrivilegesDto } from './dto/update-privileges.dto';
 
+@ApiSecurity('bearerAuth')
 @ApiTags('management/staff')
 @Controller('management/staff')
+@UseGuards(PermissionsGuard)
 export class StaffController {
   constructor(private readonly _staffService: StaffService) {}
 
@@ -20,12 +32,17 @@ export class StaffController {
     return this._staffService.getStaffMember(Number(memberId));
   }
 
-  @Post('updatePrivileges/:id')
+  @Patch('updatePrivileges/:id')
   updatePrivileges(
-    @Param('id') memberId: number,
-    @Body() privileges: PrivilegesType,
+    @Headers('userId') userId: string,
+    @Param('id') memberId: string,
+    @Body() privileges: UpdatePrivilegesDto,
   ): Promise<void> {
-    return this._staffService.updatePrivileges(Number(memberId), privileges);
+    return this._staffService.updatePrivileges(
+      Number(userId),
+      Number(memberId),
+      privileges,
+    );
   }
 
   @Post()

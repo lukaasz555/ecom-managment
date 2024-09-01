@@ -1,15 +1,18 @@
 import {
+  BadRequestException,
   HttpException,
   HttpStatus,
   Injectable,
   NotFoundException,
+  UnauthorizedException,
 } from '@nestjs/common';
-import { CreateStaffMemberDto } from './dto/CreateStaffMemberDto';
+import { CreateStaffMemberDto } from './dto/create-staff-member.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { StaffMemberDto } from './dto/StaffMemberDto';
-import { getPrivilegesDifference } from './helpers/getPrivilegesDifference';
-import { PrivilegesType } from '../types/Privileges.type';
-import { StaffMemberFactory } from './factories/StaffMemberFactory';
+import { StaffMemberDto } from './dto/staff-member.dto';
+import { StaffMemberFactory } from './factories/staff-member-factory';
+import { UpdatePrivilegesDto } from './dto/update-privileges.dto';
+import { RolesEnum } from '@src/enums';
+import { verifyPrivilegesForRole } from '@src/management/helpers/verify-privileges-for-role';
 
 @Injectable()
 export class StaffService {
@@ -36,24 +39,47 @@ export class StaffService {
   }
 
   async updatePrivileges(
+    userId: number,
     staffMemberId: number,
-    privileges: PrivilegesType,
+    newPrivileges: UpdatePrivilegesDto,
   ): Promise<void> {
-    this._validatePrivileges(privileges);
-
-    // TODO: add validator #later
-    // 1. retrieve from headers id of user that makes the call
-    // 2. check if this user is allowed to update privileges
-    // 3. if yes, check privileges (e.g. Manager cannot update Admin privileges, Assistant cannot have higher privilege than readonly in StaffMembers etc. There is a lot to think about here)
-    // 4. proceed with the update if everything is ok
-
-    const staffMember = await this._prismaService.staff.findFirstOrThrow({
+    const updater = await this._prismaService.staff.findFirstOrThrow({
       where: {
-        id: staffMemberId,
+        id: userId,
       },
     });
-    if (!staffMember) {
+
+    if (!updater) {
+      throw new UnauthorizedException(
+        'Wrong userId in headers - updatePrivileges',
+      );
+    }
+
+    const staffMemberUpdater = new StaffMemberDto(updater);
+
+    const staffMemberToUpdate =
+      await this._prismaService.staff.findFirstOrThrow({
+        where: {
+          id: staffMemberId,
+        },
+      });
+    if (!staffMemberToUpdate) {
       throw new NotFoundException('Staff member not found');
+    }
+
+    if (staffMemberToUpdate.role === RolesEnum.ADMIN) {
+      throw new BadRequestException('Cannot update privileges of an admin');
+    }
+
+    const dataFromDto = newPrivileges.getPrivilegesForUpdate();
+
+    const isUpdateAllowed = verifyPrivilegesForRole(
+      staffMemberUpdater.role,
+      newPrivileges,
+    );
+
+    if (!isUpdateAllowed) {
+      throw new BadRequestException('Cannot update privileges - invalid data');
     }
 
     await this._prismaService.staff.update({
@@ -61,7 +87,7 @@ export class StaffService {
         id: staffMemberId,
       },
       data: {
-        privileges,
+        privileges: dataFromDto,
       },
     });
   }
@@ -86,16 +112,6 @@ export class StaffService {
       throw new HttpException(
         'Internal server error',
         HttpStatus.INTERNAL_SERVER_ERROR,
-      );
-    }
-  }
-
-  private _validatePrivileges(privileges: PrivilegesType): void {
-    const diff = getPrivilegesDifference(privileges);
-    if (diff.length > 0) {
-      throw new HttpException(
-        `Privileges are missing: ${diff.join(', ')}`,
-        HttpStatus.BAD_REQUEST,
       );
     }
   }

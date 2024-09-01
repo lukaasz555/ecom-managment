@@ -7,4 +7,6 @@ export enum ModulesEnum {
   REPORTS = 'reports',
   SETTINGS = 'settings',
   PAYMENTS = 'payments',
+  AUTH = 'auth',
+  ACCOUNT = 'account',
 }

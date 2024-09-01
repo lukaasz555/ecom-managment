@@ -5,10 +5,12 @@ import { SwaggerModule } from '@nestjs/swagger';
 import { swaggerConfig } from './config/swagger.config';
 import { ValidationPipe } from '@nestjs/common';
 import { HttpExceptionFilter } from './utils/HttpExceptionFilter';
+import helmet from 'helmet';
 
 async function bootstrap() {
   const PORT = process.env.PORT || 4004;
   const app = await NestFactory.create(AppModule);
+  app.use(helmet());
   app.useGlobalFilters(new HttpExceptionFilter());
   app.useLogger(app.get(Logger));
   app.setGlobalPrefix('api/v1');
@@ -20,6 +22,7 @@ async function bootstrap() {
   app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true,
+      transform: true,
     }),
   );
 
