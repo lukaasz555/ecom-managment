@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { ManagementPermissionsService } from '@src/management/permissions/managementPermissions.service';
+import { ManagementPermissionsService } from '@src/management/permissions/management-permissions.service';
 import { PermissionsGuard } from './permissions-guard';
 import { PrivilegesEnum, RolesEnum } from '@src/enums';
 import { PrivilegesType } from '../types';

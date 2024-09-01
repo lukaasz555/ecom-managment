@@ -1,5 +1,5 @@
 import { PrivilegesEnum } from '@src/enums';
-import { isPrivelegeSufficient } from '@src/management/helpers/isPrivelegeSufficient';
+import { isPrivelegeSufficient } from '@src/management/helpers/is-privelege-sufficient';
 
 describe('isPrivilegeSufficient', () => {
   it('user has full privileges - always should return true', () => {
