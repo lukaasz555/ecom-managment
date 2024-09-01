@@ -46,4 +46,15 @@ export class UpdatePrivilegesDto {
       [ModulesEnum.STAFF_MEMBERS]: this[ModulesEnum.STAFF_MEMBERS],
     };
   }
+
+  setPrivileges(privileges: Partial<Record<ModulesEnum, PrivilegesEnum>>) {
+    this[ModulesEnum.ORDERS] = privileges[ModulesEnum.ORDERS];
+    this[ModulesEnum.CUSTOMERS] = privileges[ModulesEnum.CUSTOMERS];
+    this[ModulesEnum.DISCOUNTS] = privileges[ModulesEnum.DISCOUNTS];
+    this[ModulesEnum.PAYMENTS] = privileges[ModulesEnum.PAYMENTS];
+    this[ModulesEnum.PRODUCTS] = privileges[ModulesEnum.PRODUCTS];
+    this[ModulesEnum.REPORTS] = privileges[ModulesEnum.REPORTS];
+    this[ModulesEnum.SETTINGS] = privileges[ModulesEnum.SETTINGS];
+    this[ModulesEnum.STAFF_MEMBERS] = privileges[ModulesEnum.STAFF_MEMBERS];
+  }
 }
