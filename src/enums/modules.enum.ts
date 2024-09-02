@@ -9,4 +9,5 @@ export enum ModulesEnum {
   PAYMENTS = 'payments',
   AUTH = 'auth',
   ACCOUNT = 'account',
+  CATEGORIES = 'categories',
 }
