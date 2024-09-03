@@ -9,5 +9,5 @@ export class CreateCategoryDto {
   description?: string;
 
   @IsOptional()
-  parentCategoryId?: number;
+  parentId?: number;
 }

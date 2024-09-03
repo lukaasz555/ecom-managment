@@ -7,8 +7,25 @@ export class CategoriesService {
   constructor(private readonly _prismaService: PrismaService) {}
 
   async getCategories(): Promise<CategoryDto[]> {
-    const categories = await this._prismaService.category.findMany();
+    const categories = await this._prismaService.category.findMany({
+      where: {
+        parentId: null,
+      },
+    });
     return categories.map((category) => new CategoryDto(category));
+  }
+
+  async getCategory(categoryId: number): Promise<CategoryDto> {
+    const category = await this._prismaService.category.findUnique({
+      where: {
+        id: categoryId,
+      },
+    });
+    if (!category) {
+      throw new HttpException('Category not found', HttpStatus.NOT_FOUND);
+    }
+
+    return new CategoryDto(category);
   }
 
   async createCategory(
@@ -17,6 +34,7 @@ export class CategoriesService {
     console.log(createCategoryDto);
     // TODO: Implement this method
     try {
+      console.log('createCategoryDto', createCategoryDto);
       const newCategory = await this._prismaService.category.create({
         data: createCategoryDto,
       });

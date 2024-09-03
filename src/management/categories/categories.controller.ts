@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { ApiSecurity, ApiTags } from '@nestjs/swagger';
 import { CategoriesService } from './categories.service';
 import { CategoryDto, CreateCategoryDto } from './dto';
@@ -13,6 +13,11 @@ export class CategoriesController {
   @Get()
   getCategories(): Promise<CategoryDto[]> {
     return this._categoriesService.getCategories();
+  }
+
+  @Get(':categoryId')
+  getCategory(@Param('categoryId') categoryId: string): Promise<CategoryDto> {
+    return this._categoriesService.getCategory(Number(categoryId));
   }
 
   @Post()
