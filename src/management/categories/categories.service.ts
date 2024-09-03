@@ -20,21 +20,33 @@ export class CategoriesService {
       where: {
         id: categoryId,
       },
+      include: {
+        children: true,
+        parent: true,
+      },
     });
     if (!category) {
       throw new HttpException('Category not found', HttpStatus.NOT_FOUND);
     }
 
-    return new CategoryDto(category);
+    const categoryDto = new CategoryDto(category);
+    if (category.parent) {
+      categoryDto.setParent(new CategoryDto(category.parent));
+    }
+
+    const childrenCategories = category.children.map(
+      (category) => new CategoryDto(category),
+    );
+    categoryDto.setChildren(childrenCategories);
+
+    return categoryDto;
   }
 
   async createCategory(
     createCategoryDto: CreateCategoryDto,
   ): Promise<CategoryDto> {
-    console.log(createCategoryDto);
     // TODO: Implement this method
     try {
-      console.log('createCategoryDto', createCategoryDto);
       const newCategory = await this._prismaService.category.create({
         data: createCategoryDto,
       });
