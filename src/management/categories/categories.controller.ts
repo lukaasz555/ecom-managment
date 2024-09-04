@@ -6,15 +6,17 @@ import {
   Param,
   Patch,
   Post,
+  UseGuards,
 } from '@nestjs/common';
 import { ApiSecurity, ApiTags } from '@nestjs/swagger';
 import { CategoriesService } from './categories.service';
 import { CategoryDto, CreateCategoryDto, UpdateCategoryDto } from './dto';
+import { PermissionsGuard } from '../guards/permissions-guard';
 
-// TODO: Add permission guard
 @ApiSecurity('bearerAuth')
 @ApiTags('management/categories')
 @Controller('categories')
+@UseGuards(PermissionsGuard)
 export class CategoriesController {
   constructor(private readonly _categoriesService: CategoriesService) {}
 
