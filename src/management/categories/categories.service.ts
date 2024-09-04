@@ -109,6 +109,43 @@ export class CategoriesService {
     return new CategoryDto(updatedCategory);
   }
 
+  async deleteCategory(categoryId: number): Promise<void> {
+    const category = await this._prismaService.category.findUnique({
+      where: {
+        id: categoryId,
+      },
+      include: {
+        children: true,
+      },
+    });
+
+    if (!category) {
+      throw new HttpException('Category not found', HttpStatus.NOT_FOUND);
+    }
+
+    // TODO: handle relations with products
+
+    if (category.children.length) {
+      const names = category.children
+        .map((category) => category.name)
+        .join(', ');
+
+      throw new HttpException(
+        `Category has nested categories: ${names}`,
+        HttpStatus.CONFLICT,
+      );
+    }
+
+    await this._prismaService.category.update({
+      where: {
+        id: categoryId,
+      },
+      data: {
+        deletedAt: new Date(),
+      },
+    });
+  }
+
   private async _isCategoryExists(categoryId: number): Promise<boolean> {
     const category = await this._prismaService.category.findUnique({
       where: {

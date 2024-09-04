@@ -1,4 +1,12 @@
-import { Body, Controller, Get, Param, Patch, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+} from '@nestjs/common';
 import { ApiSecurity, ApiTags } from '@nestjs/swagger';
 import { CategoriesService } from './categories.service';
 import { CategoryDto, CreateCategoryDto, UpdateCategoryDto } from './dto';
@@ -36,5 +44,10 @@ export class CategoriesController {
     @Body() createCategoryDto: CreateCategoryDto,
   ): Promise<CategoryDto> {
     return this._categoriesService.createCategory(createCategoryDto);
+  }
+
+  @Delete(':categoryId')
+  deleteCategory(@Param('categoryId') categoryId: string): Promise<void> {
+    return this._categoriesService.deleteCategory(Number(categoryId));
   }
 }
