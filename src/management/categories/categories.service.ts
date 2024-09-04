@@ -1,6 +1,6 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { PrismaService } from '@src/prisma/prisma.service';
-import { CategoryDto, CreateCategoryDto } from './dto';
+import { CategoryDto, CreateCategoryDto, UpdateCategoryDto } from './dto';
 
 @Injectable()
 export class CategoriesService {
@@ -45,8 +45,19 @@ export class CategoriesService {
   async createCategory(
     createCategoryDto: CreateCategoryDto,
   ): Promise<CategoryDto> {
-    // TODO: Implement this method
     try {
+      if (createCategoryDto.parentId) {
+        const parentCategory = await this._isCategoryExists(
+          createCategoryDto.parentId,
+        );
+        if (!parentCategory) {
+          throw new HttpException(
+            'Parent category not found',
+            HttpStatus.NOT_FOUND,
+          );
+        }
+      }
+
       const newCategory = await this._prismaService.category.create({
         data: createCategoryDto,
       });
@@ -60,5 +71,50 @@ export class CategoriesService {
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
+  }
+
+  async updateCategory(
+    categoryId: number,
+    updateCategoryDto: UpdateCategoryDto,
+  ): Promise<CategoryDto> {
+    if (updateCategoryDto.parentId) {
+      const parentCategory = await this._isCategoryExists(
+        updateCategoryDto.parentId,
+      );
+      if (!parentCategory) {
+        throw new HttpException(
+          'Parent category not found',
+          HttpStatus.NOT_FOUND,
+        );
+      }
+    }
+
+    const category = await this._prismaService.category.findUnique({
+      where: {
+        id: categoryId,
+      },
+    });
+
+    if (!category) {
+      throw new HttpException('Category not found', HttpStatus.NOT_FOUND);
+    }
+
+    console.log('dto to update -> ', updateCategoryDto);
+    const updatedCategory = await this._prismaService.category.update({
+      where: {
+        id: categoryId,
+      },
+      data: updateCategoryDto,
+    });
+    return new CategoryDto(updatedCategory);
+  }
+
+  private async _isCategoryExists(categoryId: number): Promise<boolean> {
+    const category = await this._prismaService.category.findUnique({
+      where: {
+        id: categoryId,
+      },
+    });
+    return !!category;
   }
 }

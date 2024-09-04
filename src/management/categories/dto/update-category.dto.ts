@@ -11,5 +11,5 @@ export class UpdateCategoryDto {
   description?: string;
 
   @IsOptional()
-  parentCategoryId?: number;
+  parentId?: number;
 }
