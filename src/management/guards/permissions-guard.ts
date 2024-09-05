@@ -18,7 +18,7 @@ export class PermissionsGuard implements CanActivate {
     context: ExecutionContext,
   ): boolean | Promise<boolean> | Observable<boolean> {
     const request = context.switchToHttp().getRequest();
-    const moduleName = mapControllerToModuleName(context.getClass().name);
+    const moduleName = mapControllerToModuleName(context.getClass().name) ?? '';
     const methodName = context.getHandler().name;
     const userData = request['userData'] as {
       privileges: PrivilegesType;

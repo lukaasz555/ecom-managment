@@ -13,7 +13,7 @@ export function verifyPrivilegesForRole(
     const newPrivilege: PrivilegesEnum = privileges[moduleName];
     const allowedPrivileges = rolePrivelegeLimits[role][moduleName];
 
-    if (!allowedPrivileges.includes(newPrivilege)) {
+    if (allowedPrivileges && !allowedPrivileges.includes(newPrivilege)) {
       return false;
     }
   }

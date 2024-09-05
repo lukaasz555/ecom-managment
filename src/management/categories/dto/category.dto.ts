@@ -11,7 +11,7 @@ export class CategoryDto {
   constructor(category: Category) {
     this.id = category.id;
     this.name = category.name;
-    this.description = category.description;
+    this.description = category.description ?? undefined;
     this.parentId = category.parentId;
   }
 
