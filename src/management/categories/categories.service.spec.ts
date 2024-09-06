@@ -6,6 +6,7 @@ import { CategoriesController } from './categories.controller';
 import { ManagementPermissionsService } from '../permissions/management-permissions.service';
 import { PermissionsGuard } from '../guards/permissions-guard';
 import { Category } from '@prisma/client';
+import { HttpException, HttpStatus } from '@nestjs/common';
 
 const testCategories: Category[] = [
   {
@@ -79,15 +80,85 @@ describe('CategoriesService', () => {
   });
 
   describe('getCategories', () => {
-    it('should return all root categories', async () => {
+    it('should return only root & not deleted categories', async () => {
       prismaMock.category.findMany.mockResolvedValue(
-        testCategories.filter((c) => !c.deletedAt && !c.parentId),
+        testCategories.filter((c) => !c.parentId && !c.deletedAt),
       );
+
       const categories = await categoriesService.getCategories();
-      const allCategoriesAreRoot = categories.every((c) => !c.parentId);
-      expect(allCategoriesAreRoot).toBe(true);
-      expect(categories).toEqual(
-        testCategories.filter((c) => !c.deletedAt && !c.parentId),
+      const expectedCategories = testCategories.filter(
+        (c) => !c.parentId && !c.deletedAt,
+      );
+
+      expect(categories.length).toEqual(expectedCategories.length);
+      expect(categories.map((c) => c.id)).toEqual(
+        expectedCategories.map((c) => c.id),
+      );
+    });
+  });
+
+  describe('getCategory', () => {
+    it('should return category with parentId', async () => {
+      const firstCategoryWithParentId = testCategories.find((c) => c.parentId);
+      if (!firstCategoryWithParentId) {
+        throw new Error('No category with parentId found');
+      }
+
+      prismaMock.category.findUnique.mockResolvedValue(
+        firstCategoryWithParentId,
+      );
+
+      const category = await categoriesService.getCategory(
+        firstCategoryWithParentId.id,
+      );
+      expect(category.parentId).toBeTruthy();
+      expect(category.id).toEqual(firstCategoryWithParentId.id);
+    });
+  });
+
+  describe('deleteCategory', () => {
+    it('should throw NOT_FOUND if the category does not exist', async () => {
+      prismaMock.category.findUnique.mockResolvedValue(null);
+
+      await expect(categoriesService.deleteCategory(999)).rejects.toThrowError(
+        new HttpException('Category not found', HttpStatus.NOT_FOUND),
+      );
+
+      expect(prismaMock.category.findUnique).toHaveBeenCalledWith({
+        where: { id: 999 },
+        include: { children: true },
+      });
+    });
+
+    it('should throw CONFLICT if the category has children', async () => {
+      const firstCategoryWithParentId = testCategories.find((c) => c.parentId);
+      if (!firstCategoryWithParentId) {
+        throw new Error('No category with parentId found');
+      }
+
+      const parentCategory = testCategories.find(
+        (c) => c.id === firstCategoryWithParentId.parentId,
+      );
+      if (!parentCategory) {
+        throw new Error('No parent category found');
+      }
+
+      prismaMock.category.findUnique.mockResolvedValue({
+        ...parentCategory,
+        children: [firstCategoryWithParentId],
+      } as unknown as Category);
+
+      const category = await categoriesService.getCategory(parentCategory.id);
+      const nestedCategoriesNames =
+        category?.children?.map((category) => category.name).join(', ') ?? '';
+
+      await expect(
+        categoriesService.deleteCategory(parentCategory.id),
+      ).rejects.toThrow(
+        new HttpException(
+          `Category has nested categories: ${nestedCategoriesNames}`,
+          409,
+        ),
       );
     });
   });

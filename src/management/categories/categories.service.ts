@@ -10,6 +10,7 @@ export class CategoriesService {
     const categories = await this._prismaService.category.findMany({
       where: {
         parentId: null,
+        deletedAt: null,
       },
     });
     return categories.map((category) => new CategoryDto(category));
@@ -34,11 +35,12 @@ export class CategoriesService {
       categoryDto.setParent(new CategoryDto(category.parent));
     }
 
-    const childrenCategories = category.children.map(
-      (category) => new CategoryDto(category),
-    );
-    categoryDto.setChildren(childrenCategories);
-
+    if (category.children && category.children.length) {
+      const childrenCategories = category.children.map(
+        (category) => new CategoryDto(category),
+      );
+      categoryDto.setChildren(childrenCategories);
+    }
     return categoryDto;
   }
 
@@ -99,7 +101,6 @@ export class CategoriesService {
       throw new HttpException('Category not found', HttpStatus.NOT_FOUND);
     }
 
-    console.log('dto to update -> ', updateCategoryDto);
     const updatedCategory = await this._prismaService.category.update({
       where: {
         id: categoryId,
@@ -124,7 +125,6 @@ export class CategoriesService {
     }
 
     // TODO: handle relations with products
-
     if (category.children.length) {
       const names = category.children
         .map((category) => category.name)
