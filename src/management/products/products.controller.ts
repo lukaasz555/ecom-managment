@@ -1,22 +1,19 @@
 import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
 import { ApiSecurity, ApiTags } from '@nestjs/swagger';
 import { PermissionsGuard } from '../guards/permissions-guard';
+import { CreateProductDto, ProductDto } from './dto';
+import { ProductsService } from './products.service';
 
 // @ApiSecurity('bearerAuth')
 @ApiTags('management/products')
 @Controller('products')
 // @UseGuards(PermissionsGuard)
 export class ProductsController {
-  constructor() {}
+  constructor(private _productsService: ProductsService) {}
 
   @Get()
   getProducts(): Promise<ProductDto[]> {
     return this._productsService.getProducts();
-  }
-
-  @Get(':id')
-  getProduct(@Param('id') productId: number): Promise<ProductDto> {
-    return this._productsService.getProduct(Number(productId));
   }
 
   @Post()

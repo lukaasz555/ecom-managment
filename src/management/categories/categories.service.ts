@@ -49,7 +49,7 @@ export class CategoriesService {
   ): Promise<CategoryDto> {
     try {
       if (createCategoryDto.parentId) {
-        const parentCategory = await this._isCategoryExists(
+        const parentCategory = await this.isCategoryExists(
           createCategoryDto.parentId,
         );
         if (!parentCategory) {
@@ -80,7 +80,7 @@ export class CategoriesService {
     updateCategoryDto: UpdateCategoryDto,
   ): Promise<CategoryDto> {
     if (updateCategoryDto.parentId) {
-      const parentCategory = await this._isCategoryExists(
+      const parentCategory = await this.isCategoryExists(
         updateCategoryDto.parentId,
       );
       if (!parentCategory) {
@@ -146,7 +146,7 @@ export class CategoriesService {
     });
   }
 
-  private async _isCategoryExists(categoryId: number): Promise<boolean> {
+  async isCategoryExists(categoryId: number): Promise<boolean> {
     const category = await this._prismaService.category.findUnique({
       where: {
         id: categoryId,
