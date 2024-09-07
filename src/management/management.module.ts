@@ -7,9 +7,10 @@ import { StaffController } from './staff/staff.controller';
 import { ManagementPermissionsService } from './permissions/management-permissions.service';
 import { CategoriesModule } from './categories/categories.module';
 import { CategoriesController } from './categories/categories.controller';
+import { ProductsModule } from './products/products.module';
 
 @Module({
-  imports: [StaffModule, AuthModule, CategoriesModule],
+  imports: [StaffModule, AuthModule, CategoriesModule, ProductsModule],
   providers: [JwtService, ManagementPermissionsService],
 })
 export class ManagementModule implements NestModule {
