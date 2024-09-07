@@ -1,11 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { IPermission } from '../interfaces';
 import { ModulesEnum } from '@src/enums';
-import { staffPermissions } from './data/staff.permissions';
+import { categoriesPermissions, staffPermissions } from './data';
 
 @Injectable()
 export class ManagementPermissionsService {
   private readonly _staffPermisions = staffPermissions;
+  private readonly _categoriesPermissions = categoriesPermissions; // TODO: Add categories permissions
 
   constructor() {}
 
@@ -13,6 +14,8 @@ export class ManagementPermissionsService {
     switch (moduleName) {
       case ModulesEnum.STAFF_MEMBERS:
         return this._staffPermisions;
+      case ModulesEnum.CATEGORIES:
+        return this._categoriesPermissions;
       default:
         return [];
     }

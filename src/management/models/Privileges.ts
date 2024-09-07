@@ -11,6 +11,7 @@ export class Privileges {
   [ModulesEnum.PAYMENTS] = PrivilegesEnum.NOT_ALLOWED;
   [ModulesEnum.AUTH] = PrivilegesEnum.NOT_ALLOWED;
   [ModulesEnum.ACCOUNT] = PrivilegesEnum.NOT_ALLOWED;
+  [ModulesEnum.CATEGORIES] = PrivilegesEnum.NOT_ALLOWED;
 
   setPrivileges(privileges: this): void {
     Object.keys(privileges).forEach((key) => {
