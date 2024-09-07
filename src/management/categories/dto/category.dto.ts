@@ -5,8 +5,8 @@ export class CategoryDto {
   readonly name: string;
   readonly description?: string;
   readonly parentId: number | null;
-  children: CategoryDto[] | null;
-  parent: CategoryDto | null;
+  children: CategoryDto[] = [];
+  parent: CategoryDto | null = null;
 
   constructor(category: Category) {
     this.id = category.id;

@@ -7,6 +7,20 @@ import { ManagementPermissionsService } from '../permissions/management-permissi
 import { PermissionsGuard } from '../guards/permissions-guard';
 import { Category } from '@prisma/client';
 import { HttpException, HttpStatus } from '@nestjs/common';
+import { CategoryDto } from './dto/category.dto';
+
+interface IDeleted {
+  deletedAt: Date | null;
+}
+
+class DeletedCategory extends CategoryDto implements IDeleted {
+  deletedAt: Date | null;
+
+  constructor(category: Category) {
+    super(category);
+    this.deletedAt = category.deletedAt ?? new Date();
+  }
+}
 
 const testCategories: Category[] = [
   {
@@ -160,6 +174,46 @@ describe('CategoriesService', () => {
           409,
         ),
       );
+    });
+
+    it('should delete the category', async () => {
+      const rootCategories = testCategories.filter((c) => !c.parentId);
+      let categoryWithoutChildren: Category | undefined;
+
+      for (let i = 0; i < rootCategories.length; i++) {
+        const hasChild = testCategories.find(
+          (c) => c.parentId === rootCategories[i].id,
+        );
+        if (!hasChild) {
+          categoryWithoutChildren = rootCategories[i];
+          break;
+        }
+      }
+
+      expect(categoryWithoutChildren).toBeDefined();
+
+      prismaMock.category.findUnique.mockResolvedValue({
+        ...categoryWithoutChildren,
+        children: [],
+      } as unknown as Category);
+
+      const categoryToDelete = await categoriesService.getCategory(
+        categoryWithoutChildren!.id,
+      );
+
+      expect(categoryToDelete.children).toBeDefined();
+
+      const categoryToDeleteId = categoryToDelete.id;
+      await categoriesService.deleteCategory(categoryToDeleteId);
+
+      prismaMock.category.findUnique.mockResolvedValue({
+        ...categoryToDelete,
+        deletedAt: new Date(),
+      } as unknown as Category);
+
+      const cat = await categoriesService.getCategory(categoryToDeleteId);
+      const deletedCat = new DeletedCategory(cat as unknown as Category);
+      expect(deletedCat.deletedAt).toBeDefined();
     });
   });
 });
