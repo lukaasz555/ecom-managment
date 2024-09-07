@@ -59,6 +59,15 @@ const testCategories: Category[] = [
     updatedAt: new Date(),
     deletedAt: new Date(),
   },
+  {
+    id: 77,
+    name: 'Category #77',
+    parentId: 99,
+    description: 'nested in #99 (deleted)',
+    createdAt: new Date(),
+    updatedAt: new Date(),
+    deletedAt: null,
+  },
 ];
 
 describe('CategoriesService', () => {
@@ -134,7 +143,7 @@ describe('CategoriesService', () => {
     it('should throw NOT_FOUND if the category does not exist', async () => {
       prismaMock.category.findUnique.mockResolvedValue(null);
 
-      await expect(categoriesService.deleteCategory(999)).rejects.toThrowError(
+      await expect(categoriesService.deleteCategory(999)).rejects.toThrow(
         new HttpException('Category not found', HttpStatus.NOT_FOUND),
       );
 
@@ -214,6 +223,28 @@ describe('CategoriesService', () => {
       const cat = await categoriesService.getCategory(categoryToDeleteId);
       const deletedCat = new DeletedCategory(cat as unknown as Category);
       expect(deletedCat.deletedAt).toBeDefined();
+    });
+  });
+
+  describe('updateCategory', () => {
+    it('should throw NOT_FOUND if the category has wrong parentId', async () => {
+      const deletedCategory = testCategories.find((c) => c.deletedAt);
+      expect(deletedCategory).toBeDefined();
+
+      const categoryToUpdate = testCategories.find(
+        (c) => c.parentId === deletedCategory?.id,
+      );
+      expect(categoryToUpdate).toBeDefined();
+
+      if (categoryToUpdate) {
+        categoryToUpdate.description = 'updated description';
+
+        expect(
+          prismaMock.category.update.mockResolvedValue(categoryToUpdate),
+        ).rejects.toThrow(
+          new HttpException('Parent category not found', HttpStatus.NOT_FOUND),
+        );
+      }
     });
   });
 });
