@@ -1,4 +1,4 @@
-import { ModulesEnum, PrivilegesEnum, RolesEnum } from '@src/enums';
+import { ModulesEnum, PrivilegesEnum, RolesEnum } from '@src/common/enums';
 
 type RolePrivilegeLimit = {
   [role in RolesEnum]: {

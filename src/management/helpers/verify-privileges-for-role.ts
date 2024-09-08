@@ -1,4 +1,4 @@
-import { RolesEnum, ModulesEnum, PrivilegesEnum } from '@src/enums';
+import { RolesEnum, ModulesEnum, PrivilegesEnum } from '@src/common/enums';
 import { UpdatePrivilegesDto } from '@src/management/staff/dto/update-privileges.dto';
 import { rolePrivelegeLimits } from '@src/management/utils/role-privelege-limits';
 

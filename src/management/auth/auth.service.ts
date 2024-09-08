@@ -6,7 +6,7 @@ import {
 import { PrismaService } from 'src/prisma/prisma.service';
 import { SignInDto } from './dto/sign-in.dto';
 import { JwtService } from '@nestjs/jwt';
-import { validatePassword } from 'src/helpers';
+import { validatePassword } from '@src/common/helpers';
 
 @Injectable()
 export class AuthService {

@@ -11,7 +11,7 @@ import { PrismaService } from 'src/prisma/prisma.service';
 import { StaffMemberDto } from './dto/staff-member.dto';
 import { StaffMemberFactory } from './factories/staff-member-factory';
 import { UpdatePrivilegesDto } from './dto/update-privileges.dto';
-import { RolesEnum } from '@src/enums';
+import { RolesEnum } from '@src/common/enums';
 import { verifyPrivilegesForRole } from '@src/management/helpers/verify-privileges-for-role';
 
 @Injectable()

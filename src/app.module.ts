@@ -8,7 +8,7 @@ import { LoggerModule } from 'nestjs-pino';
 import { StoreModule } from './store/store.module';
 import { ConfigModule } from '@nestjs/config';
 import { ManagementModule } from './management/management.module';
-import { LoggerMiddleware } from './middleware/logger.middleware';
+import { LoggerMiddleware } from './common/middleware/logger.middleware';
 
 @Module({
   imports: [

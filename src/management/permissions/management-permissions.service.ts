@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { IPermission } from '../interfaces';
-import { ModulesEnum } from '@src/enums';
+import { ModulesEnum } from '@src/common/enums';
 import { categoriesPermissions, staffPermissions } from './data';
 
 @Injectable()

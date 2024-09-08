@@ -1,5 +1,5 @@
 import { Staff } from '@prisma/client';
-import { RolesEnum } from 'src/enums';
+import { RolesEnum } from '@src/common/enums';
 import { Privileges } from '@src/management/models/privileges';
 import { PrivilegesType } from 'src/management/types';
 
