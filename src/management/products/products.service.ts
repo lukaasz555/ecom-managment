@@ -2,6 +2,7 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { PrismaService } from '@src/prisma/prisma.service';
 import { CreateProductDto, ProductDto } from './dto';
 import { CategoriesService } from '../categories/categories.service';
+import { PaginationData } from '@src/common/models';
 
 @Injectable()
 export class ProductsService {
@@ -10,12 +11,20 @@ export class ProductsService {
     private _categoriesService: CategoriesService,
   ) {}
 
-  async getProducts() {
-    // TODO: implement pagination
-    const products = await this._prismaService.product.findMany();
+  async getProducts(
+    paginationData: PaginationData<ProductDto>,
+  ): Promise<PaginationData<ProductDto>> {
+    const [products, count] = await this._prismaService.$transaction([
+      this._prismaService.product.findMany({
+        skip: paginationData.offset,
+        take: paginationData.limit,
+      }),
+      this._prismaService.product.count(),
+    ]);
 
     const res = products.map((product) => new ProductDto(product));
-    return res;
+    paginationData.setItems(res).setTotalRecords(count).setTotalPages();
+    return paginationData;
   }
 
   async createProduct(createProductDto: CreateProductDto) {
