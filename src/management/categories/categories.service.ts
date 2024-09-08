@@ -85,8 +85,8 @@ export class CategoriesService {
       );
       if (!parentCategory) {
         throw new HttpException(
-          'Parent category not found',
-          HttpStatus.NOT_FOUND,
+          'Wrong parent category',
+          HttpStatus.BAD_REQUEST,
         );
       }
     }
@@ -150,6 +150,7 @@ export class CategoriesService {
     const category = await this._prismaService.category.findUnique({
       where: {
         id: categoryId,
+        deletedAt: null,
       },
     });
     return !!category;
