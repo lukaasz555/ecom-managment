@@ -1,15 +1,22 @@
-export class PaginationData<T> {
+import { IPagination, ISortable } from '../interfaces';
+
+export class PaginationData<T> implements IPagination<T>, ISortable {
   items: T[];
   page = 1;
   limit = 10;
-  private _offset = 0;
   totalRecords = 0;
+  private _offset = 0;
   private _totalPages = 0;
   search = '';
+  sortBy = '';
 
   constructor(page?: number, limit?: number) {
     this.setPage(page || 1);
     this.setLimit(limit || 10);
+  }
+
+  get offset() {
+    return this._offset;
   }
 
   setItems(items: T[]) {
@@ -55,10 +62,6 @@ export class PaginationData<T> {
     if (query.search) {
       this.setSearch(query.search);
     }
-  }
-
-  get offset() {
-    return this._offset;
   }
 
   private _setOffset() {
