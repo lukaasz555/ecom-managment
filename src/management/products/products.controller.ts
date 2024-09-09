@@ -1,22 +1,17 @@
-import {
-  Body,
-  Controller,
-  Get,
-  Param,
-  Post,
-  Query,
-  UseGuards,
-} from '@nestjs/common';
+import { Body, Controller, Get, Post, Query, UseGuards } from '@nestjs/common';
 import { ApiSecurity, ApiTags } from '@nestjs/swagger';
 import { PermissionsGuard } from '../guards/permissions-guard';
 import { CreateProductDto, ProductDto } from './dto';
 import { ProductsService } from './products.service';
 import { PaginationData } from '@src/common/models';
+import { ModulesEnum } from '@src/common/enums';
 
-// @ApiSecurity('bearerAuth')
-@ApiTags('management/products')
-@Controller('management/products')
-// @UseGuards(PermissionsGuard)
+const MODULE_NAME = `management/${ModulesEnum.PRODUCTS}`;
+
+@ApiSecurity('bearerAuth')
+@ApiTags(MODULE_NAME)
+@Controller(MODULE_NAME)
+@UseGuards(PermissionsGuard)
 export class ProductsController {
   constructor(private _productsService: ProductsService) {}
 

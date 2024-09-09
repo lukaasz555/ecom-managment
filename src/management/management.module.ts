@@ -8,9 +8,10 @@ import { ManagementPermissionsService } from './permissions/management-permissio
 import { CategoriesModule } from './categories/categories.module';
 import { CategoriesController } from './categories/categories.controller';
 import { ProductsModule } from './products/products.module';
+import { ProductsController } from './products/products.controller';
 
 @Module({
-  imports: [StaffModule, AuthModule, CategoriesModule, ProductsModule],
+  imports: [AuthModule, StaffModule, CategoriesModule, ProductsModule],
   providers: [JwtService, ManagementPermissionsService],
 })
 export class ManagementModule implements NestModule {
@@ -19,6 +20,6 @@ export class ManagementModule implements NestModule {
     consumer
       .apply(JwtMiddleware)
       .exclude('auth/*')
-      .forRoutes(StaffController, CategoriesController);
+      .forRoutes(StaffController, CategoriesController, ProductsController);
   }
 }

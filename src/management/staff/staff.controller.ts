@@ -14,10 +14,13 @@ import { CreateStaffMemberDto } from './dto/create-staff-member.dto';
 import { StaffMemberDto } from './dto/staff-member.dto';
 import { PermissionsGuard } from '../guards/permissions-guard';
 import { UpdatePrivilegesDto } from './dto/update-privileges.dto';
+import { ModulesEnum } from '@src/common/enums';
+
+const MODULE_NAME = `management/${ModulesEnum.STAFF_MEMBERS}`;
 
 @ApiSecurity('bearerAuth')
-@ApiTags('management/staff')
-@Controller('management/staff')
+@ApiTags(MODULE_NAME)
+@Controller(MODULE_NAME)
 @UseGuards(PermissionsGuard)
 export class StaffController {
   constructor(private readonly _staffService: StaffService) {}

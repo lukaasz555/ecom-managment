@@ -12,10 +12,13 @@ import { ApiSecurity, ApiTags } from '@nestjs/swagger';
 import { CategoriesService } from './categories.service';
 import { CategoryDto, CreateCategoryDto, UpdateCategoryDto } from './dto';
 import { PermissionsGuard } from '../guards/permissions-guard';
+import { ModulesEnum } from '@src/common/enums';
+
+const MODULE_NAME = `management/${ModulesEnum.CATEGORIES}`;
 
 @ApiSecurity('bearerAuth')
-@ApiTags('management/categories')
-@Controller('categories')
+@ApiTags(MODULE_NAME)
+@Controller(MODULE_NAME)
 @UseGuards(PermissionsGuard)
 export class CategoriesController {
   constructor(private readonly _categoriesService: CategoriesService) {}
