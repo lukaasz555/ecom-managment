@@ -10,7 +10,6 @@ import { ProductDto } from './dto';
 import { PaginationData } from '@src/common/models';
 
 function returnMockPaginationData(page: number, limit: number): ProductDto[] {
-  console.log('returnMockPaginationData start....', page, limit);
   const start = (page - 1) * limit;
   const end = start + limit;
   return mockProducts.slice(start, end);
@@ -25,14 +24,6 @@ describe('ProductsService', () => {
         CategoriesService,
         ManagementPermissionsService,
         ProductsService,
-        // {
-        //   provide: ProductsService,
-        //   useValue: {
-        //     getProducts: jest.fn((page: number, limit: number) =>
-        //       returnMockPaginationData(page, limit),
-        //     ),
-        //   },
-        // },
         {
           provide: PermissionsGuard,
           useValue: {
