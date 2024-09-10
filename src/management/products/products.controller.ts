@@ -10,12 +10,13 @@ import {
   Query,
   UseGuards,
 } from '@nestjs/common';
-import { ApiSecurity, ApiTags } from '@nestjs/swagger';
+import { ApiQuery, ApiSecurity, ApiTags } from '@nestjs/swagger';
 import { PermissionsGuard } from '../guards/permissions-guard';
 import { CreateProductDto, ProductDto, UpdateProductDto } from './dto';
 import { ProductsService } from './products.service';
 import { ModulesEnum } from '@src/common/enums';
 import { ProductsPagination } from './models/products-pagination';
+import { IPaginationResult } from '@src/common/interfaces';
 
 const MODULE_NAME = `management/${ModulesEnum.PRODUCTS}`;
 
@@ -27,9 +28,11 @@ export class ProductsController {
   constructor(private _productsService: ProductsService) {}
 
   @Get()
+  @ApiQuery({ name: 'page', required: false, type: Number })
+  @ApiQuery({ name: 'limit', required: false, type: Number })
   getProducts(
     @Query() query: Record<string, string>,
-  ): Promise<ProductsPagination> {
+  ): Promise<IPaginationResult<ProductDto>> {
     const paginationData = new ProductsPagination();
     paginationData.getDataFromQuery(query);
     return this._productsService.getProducts(paginationData);

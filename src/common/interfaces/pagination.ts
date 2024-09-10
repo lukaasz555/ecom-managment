@@ -1,3 +1,5 @@
+import { IPaginationResult } from '.';
+
 export interface IPagination<T> {
   items: T[];
   page: number;
@@ -10,4 +12,5 @@ export interface IPagination<T> {
   setTotalRecords(totalRecords: number): this;
   setTotalPages(): this;
   getDataFromQuery(query: Record<string, string>): void;
+  getPaginationResult(): IPaginationResult<T>;
 }

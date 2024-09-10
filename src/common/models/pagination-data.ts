@@ -1,4 +1,4 @@
-import { IPagination } from '../interfaces';
+import { IPagination, IPaginationResult } from '../interfaces';
 
 export class PaginationData<T> implements IPagination<T> {
   items: T[];
@@ -52,6 +52,19 @@ export class PaginationData<T> implements IPagination<T> {
     if (query.limit) {
       this.setLimit(parseInt(query.limit));
     }
+  }
+
+  getPaginationResult(): IPaginationResult<T> {
+    const res: IPaginationResult<T> = {
+      meta: {
+        totalRecords: this.totalRecords,
+        totalPages: this._totalPages,
+        page: this.page,
+        limit: this.limit,
+      },
+      items: this.items,
+    };
+    return res;
   }
 
   private _setOffset() {

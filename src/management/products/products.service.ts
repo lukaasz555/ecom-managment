@@ -3,6 +3,7 @@ import { PrismaService } from '@src/prisma/prisma.service';
 import { CreateProductDto, ProductDto, UpdateProductDto } from './dto';
 import { CategoriesService } from '../categories/categories.service';
 import { ProductsPagination } from './models/products-pagination';
+import { IPaginationResult } from '@src/common/interfaces';
 
 @Injectable()
 export class ProductsService {
@@ -13,7 +14,7 @@ export class ProductsService {
 
   async getProducts(
     paginationData: ProductsPagination,
-  ): Promise<ProductsPagination> {
+  ): Promise<IPaginationResult<ProductDto>> {
     const [products, count] = await this._prismaService.$transaction([
       this._prismaService.product.findMany({
         skip: paginationData.offset,
@@ -24,7 +25,7 @@ export class ProductsService {
 
     const res = products.map((product) => new ProductDto(product));
     paginationData.setItems(res).setTotalRecords(count).setTotalPages();
-    return paginationData;
+    return paginationData.getPaginationResult();
   }
 
   async getProduct(productId: number): Promise<ProductDto> {
