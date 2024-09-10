@@ -7,9 +7,9 @@ import { PrismaService } from '@src/prisma/prisma.service';
 import { prismaMock } from '@src/singleton';
 import { mockProducts } from './data/mock-products';
 import { CreateProductDto, ProductDto } from './dto';
-import { PaginationData } from '@src/common/models';
 import { Product } from '@prisma/client';
 import { HttpException, HttpStatus } from '@nestjs/common';
+import { ProductsPagination } from './models/products-pagination';
 
 function returnMockPaginationData(page: number, limit: number): ProductDto[] {
   const start = (page - 1) * limit;
@@ -55,7 +55,7 @@ describe('ProductsService', () => {
 
   describe('getProducts', () => {
     it('should return an array of products', async () => {
-      const paginationData = new PaginationData<ProductDto>();
+      const paginationData = new ProductsPagination();
       paginationData.getDataFromQuery({ page: '1', limit: '5' });
 
       const mockCount = mockProducts.length;
