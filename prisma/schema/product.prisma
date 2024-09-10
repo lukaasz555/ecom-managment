@@ -1,9 +1,12 @@
 model Product {
-    id         Int       @id @default(autoincrement())
-    title      String
-    categoryId Int
-    category   Category  @relation("CategoryToProduct", fields: [categoryId], references: [id])
-    createdAt  DateTime  @default(now())
-    updatedAt  DateTime  @updatedAt
-    deletedAt  DateTime?
+    id          Int       @id @default(autoincrement())
+    title       String
+    categoryId  Int
+    category    Category  @relation("CategoryToProduct", fields: [categoryId], references: [id])
+    price       Int       @default(0)
+    stock       Int       @default(0)
+    isAvailable Boolean   @default(false)
+    createdAt   DateTime  @default(now())
+    updatedAt   DateTime  @updatedAt
+    deletedAt   DateTime?
 }
