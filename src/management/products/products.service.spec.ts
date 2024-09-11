@@ -69,10 +69,10 @@ describe('ProductsService', () => {
       const result = await productsService.getProducts(paginationData);
 
       expect(result.items.length).toBeLessThanOrEqual(paginationData.limit);
-      expect(result.totalRecords).toBe(mockCount);
+      expect(result.meta.totalRecords).toBe(mockCount);
       expect(result.items[0]).toBeInstanceOf(ProductDto);
-      expect(result.page).toBe(paginationData.page);
-      expect(result.limit).toBe(paginationData.limit);
+      expect(result.meta.page).toBe(paginationData.page);
+      expect(result.meta.limit).toBe(paginationData.limit);
     });
   });
 

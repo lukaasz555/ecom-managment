@@ -4,6 +4,7 @@ import {
   Delete,
   Get,
   Param,
+  ParseIntPipe,
   Patch,
   Post,
   UseGuards,
@@ -30,7 +31,7 @@ export class CategoriesController {
 
   @Patch(':categoryId')
   updateCategory(
-    @Param('categoryId') categoryId: string,
+    @Param('categoryId', ParseIntPipe) categoryId: string,
     @Body() updateCategoryDto: UpdateCategoryDto,
   ): Promise<CategoryDto> {
     return this._categoriesService.updateCategory(
@@ -40,7 +41,9 @@ export class CategoriesController {
   }
 
   @Get(':categoryId')
-  getCategory(@Param('categoryId') categoryId: string): Promise<CategoryDto> {
+  getCategory(
+    @Param('categoryId', ParseIntPipe) categoryId: string,
+  ): Promise<CategoryDto> {
     return this._categoriesService.getCategory(Number(categoryId));
   }
 
@@ -52,7 +55,9 @@ export class CategoriesController {
   }
 
   @Delete(':categoryId')
-  deleteCategory(@Param('categoryId') categoryId: string): Promise<void> {
+  deleteCategory(
+    @Param('categoryId', ParseIntPipe) categoryId: string,
+  ): Promise<void> {
     return this._categoriesService.deleteCategory(Number(categoryId));
   }
 }

@@ -4,6 +4,7 @@ import {
   Get,
   Headers,
   Param,
+  ParseIntPipe,
   Patch,
   Post,
   UseGuards,
@@ -30,20 +31,22 @@ export class StaffController {
     return this._staffService.getStaffMembers();
   }
 
-  @Get(':id')
-  getStaffMember(@Param('id') memberId: number): Promise<StaffMemberDto> {
-    return this._staffService.getStaffMember(Number(memberId));
+  @Get(':staffId')
+  getStaffMember(
+    @Param('staffId', ParseIntPipe) staffId: number,
+  ): Promise<StaffMemberDto> {
+    return this._staffService.getStaffMember(Number(staffId));
   }
 
-  @Patch('updatePrivileges/:id')
+  @Patch('updatePrivileges/:memberId')
   updatePrivileges(
     @Headers('userId') userId: string,
-    @Param('id') memberId: string,
+    @Param('memberId', ParseIntPipe) memberId: number,
     @Body() privileges: UpdatePrivilegesDto,
   ): Promise<void> {
     return this._staffService.updatePrivileges(
       Number(userId),
-      Number(memberId),
+      memberId,
       privileges,
     );
   }

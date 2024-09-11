@@ -38,9 +38,9 @@ export class ProductsController {
     return this._productsService.getProducts(paginationData);
   }
 
-  @Get(':id')
+  @Get(':productId')
   getProduct(
-    @Param('id', ParseIntPipe) productId: number,
+    @Param('productId', ParseIntPipe) productId: number,
   ): Promise<ProductDto> {
     return this._productsService.getProduct(productId);
   }
@@ -52,16 +52,18 @@ export class ProductsController {
     return this._productsService.createProduct(createProductDto);
   }
 
-  @Patch(':id')
+  @Patch(':productId')
   updateProduct(
-    @Param('id', ParseIntPipe) productId: number,
+    @Param('productId', ParseIntPipe) productId: number,
     @Body() updateProductDto: UpdateProductDto,
   ): Promise<ProductDto> {
     return this._productsService.updateProduct(productId, updateProductDto);
   }
 
-  @Delete(':id')
-  deleteProduct(@Param('id', ParseIntPipe) productId: number): Promise<void> {
+  @Delete(':productId')
+  deleteProduct(
+    @Param('productId', ParseIntPipe) productId: number,
+  ): Promise<void> {
     return this._productsService.deleteProduct(productId);
   }
 }
