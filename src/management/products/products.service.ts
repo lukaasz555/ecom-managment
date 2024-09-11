@@ -15,12 +15,17 @@ export class ProductsService {
   async getProducts(
     paginationData: ProductsPagination,
   ): Promise<IPaginationResult<ProductDto>> {
+    const { skip, take, where } = paginationData.buildPrismaQuery();
+
     const [products, count] = await this._prismaService.$transaction([
       this._prismaService.product.findMany({
-        skip: paginationData.offset,
-        take: paginationData.limit,
+        skip,
+        take,
+        where,
       }),
-      this._prismaService.product.count(),
+      this._prismaService.product.count({
+        where,
+      }),
     ]);
 
     const res = products.map((product) => new ProductDto(product));
