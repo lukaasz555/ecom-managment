@@ -8,6 +8,7 @@ import { PermissionsGuard } from '../guards/permissions-guard';
 import { Category } from '@prisma/client';
 import { HttpException, HttpStatus } from '@nestjs/common';
 import { CategoryDto } from './dto/category.dto';
+import { UpdateCategoryDto } from './dto';
 
 interface IDeleted {
   deletedAt: Date | null;
@@ -102,6 +103,7 @@ describe('CategoriesService', () => {
     expect(categoriesService).toBeDefined();
   });
 
+  // TODO: works well
   describe('getCategories', () => {
     it('should return only root & not deleted categories', async () => {
       prismaMock.category.findMany.mockResolvedValue(
@@ -120,6 +122,7 @@ describe('CategoriesService', () => {
     });
   });
 
+  // TODO: works well
   describe('getCategory', () => {
     it('should return category with parentId', async () => {
       const firstCategoryWithParentId = testCategories.find((c) => c.parentId);
@@ -227,24 +230,39 @@ describe('CategoriesService', () => {
   });
 
   describe('updateCategory', () => {
-    it('should throw NOT_FOUND if the category has wrong parentId', async () => {
-      const deletedCategory = testCategories.find((c) => c.deletedAt);
-      expect(deletedCategory).toBeDefined();
-
-      const categoryToUpdate = testCategories.find(
-        (c) => c.parentId === deletedCategory?.id,
+    it('should throw bad request - parent category is deleted', async () => {
+      const updateCategoryDto = new UpdateCategoryDto();
+      const firstDeletedRootCategory = testCategories.find(
+        (c) => !c.parentId && c.deletedAt,
       );
-      expect(categoryToUpdate).toBeDefined();
+      expect(firstDeletedRootCategory).toBeDefined();
 
-      if (categoryToUpdate) {
-        categoryToUpdate.description = 'updated description';
+      const firstChildOfDeletedRootCategory = testCategories.find(
+        (c) => c.parentId === firstDeletedRootCategory?.id,
+      );
+      expect(firstChildOfDeletedRootCategory).toBeDefined();
 
-        expect(
-          prismaMock.category.update.mockResolvedValue(categoryToUpdate),
-        ).rejects.toThrow(
-          new HttpException('Parent category not found', HttpStatus.NOT_FOUND),
+      if (!firstDeletedRootCategory || !firstChildOfDeletedRootCategory) {
+        throw new Error(
+          'Invalid test data (category or parent category not found)',
         );
       }
+
+      updateCategoryDto.id = firstChildOfDeletedRootCategory.id;
+      updateCategoryDto.parentId = firstDeletedRootCategory.id;
+      updateCategoryDto.description = 'updated description';
+      updateCategoryDto.name = 'updated name';
+
+      prismaMock.category.findUnique.mockResolvedValueOnce(null);
+
+      await expect(
+        categoriesService.updateCategory(
+          updateCategoryDto.id,
+          updateCategoryDto,
+        ),
+      ).rejects.toThrow(
+        new HttpException('Wrong parent category', HttpStatus.BAD_REQUEST),
+      );
     });
   });
 });

@@ -11,7 +11,7 @@ import { PrismaService } from 'src/prisma/prisma.service';
 import { StaffMemberDto } from './dto/staff-member.dto';
 import { StaffMemberFactory } from './factories/staff-member-factory';
 import { UpdatePrivilegesDto } from './dto/update-privileges.dto';
-import { RolesEnum } from '@src/enums';
+import { RolesEnum } from '@src/common/enums';
 import { verifyPrivilegesForRole } from '@src/management/helpers/verify-privileges-for-role';
 
 @Injectable()
@@ -55,26 +55,24 @@ export class StaffService {
       );
     }
 
-    const staffMemberUpdater = new StaffMemberDto(updater);
-
     const staffMemberToUpdate =
       await this._prismaService.staff.findFirstOrThrow({
         where: {
           id: staffMemberId,
         },
       });
+
     if (!staffMemberToUpdate) {
       throw new NotFoundException('Staff member not found');
     }
-
     if (staffMemberToUpdate.role === RolesEnum.ADMIN) {
       throw new BadRequestException('Cannot update privileges of an admin');
     }
 
-    const dataFromDto = newPrivileges.getPrivilegesForUpdate();
+    const memberToUpdateDto = new StaffMemberDto(staffMemberToUpdate);
 
     const isUpdateAllowed = verifyPrivilegesForRole(
-      staffMemberUpdater.role,
+      memberToUpdateDto.role,
       newPrivileges,
     );
 
@@ -82,6 +80,7 @@ export class StaffService {
       throw new BadRequestException('Cannot update privileges - invalid data');
     }
 
+    const dataFromDto = newPrivileges.getPrivilegesForUpdate();
     await this._prismaService.staff.update({
       where: {
         id: staffMemberId,

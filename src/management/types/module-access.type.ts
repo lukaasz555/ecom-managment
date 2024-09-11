@@ -1,4 +1,4 @@
-import { ModulesEnum, RolesEnum } from 'src/enums';
+import { ModulesEnum, RolesEnum } from '@src/common/enums';
 
 export type ModuleAccessType = {
   [key in ModulesEnum]: {

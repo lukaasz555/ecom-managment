@@ -1,4 +1,4 @@
-import { ModulesEnum, PrivilegesEnum, RolesEnum } from '@src/enums';
+import { ModulesEnum, PrivilegesEnum, RolesEnum } from '@src/common/enums';
 import { UpdatePrivilegesDto } from '@src/management/staff/dto/update-privileges.dto';
 import { getBasePrivileges } from '@src/management/staff/helpers';
 import { verifyPrivilegesForRole } from '@src/management/helpers/verify-privileges-for-role';

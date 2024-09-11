@@ -4,6 +4,7 @@ import {
   Get,
   Headers,
   Param,
+  ParseIntPipe,
   Patch,
   Post,
   UseGuards,
@@ -14,10 +15,13 @@ import { CreateStaffMemberDto } from './dto/create-staff-member.dto';
 import { StaffMemberDto } from './dto/staff-member.dto';
 import { PermissionsGuard } from '../guards/permissions-guard';
 import { UpdatePrivilegesDto } from './dto/update-privileges.dto';
+import { ModulesEnum } from '@src/common/enums';
+
+const MODULE_NAME = `management/${ModulesEnum.STAFF_MEMBERS}`;
 
 @ApiSecurity('bearerAuth')
-@ApiTags('management/staff')
-@Controller('management/staff')
+@ApiTags(MODULE_NAME)
+@Controller(MODULE_NAME)
 @UseGuards(PermissionsGuard)
 export class StaffController {
   constructor(private readonly _staffService: StaffService) {}
@@ -27,20 +31,22 @@ export class StaffController {
     return this._staffService.getStaffMembers();
   }
 
-  @Get(':id')
-  getStaffMember(@Param('id') memberId: number): Promise<StaffMemberDto> {
-    return this._staffService.getStaffMember(Number(memberId));
+  @Get(':staffId')
+  getStaffMember(
+    @Param('staffId', ParseIntPipe) staffId: number,
+  ): Promise<StaffMemberDto> {
+    return this._staffService.getStaffMember(Number(staffId));
   }
 
-  @Patch('updatePrivileges/:id')
+  @Patch('updatePrivileges/:memberId')
   updatePrivileges(
     @Headers('userId') userId: string,
-    @Param('id') memberId: string,
+    @Param('memberId', ParseIntPipe) memberId: number,
     @Body() privileges: UpdatePrivilegesDto,
   ): Promise<void> {
     return this._staffService.updatePrivileges(
       Number(userId),
-      Number(memberId),
+      memberId,
       privileges,
     );
   }

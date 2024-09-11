@@ -4,7 +4,7 @@ import { Logger } from 'nestjs-pino';
 import { SwaggerModule } from '@nestjs/swagger';
 import { swaggerConfig } from './config/swagger.config';
 import { ValidationPipe } from '@nestjs/common';
-import { HttpExceptionFilter } from './utils/HttpExceptionFilter';
+import { HttpExceptionFilter } from './common/utils/HttpExceptionFilter';
 import helmet from 'helmet';
 
 async function bootstrap() {

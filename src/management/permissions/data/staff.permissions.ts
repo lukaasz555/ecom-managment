@@ -1,4 +1,4 @@
-import { RolesEnum, PrivilegesEnum } from '@src/enums';
+import { RolesEnum, PrivilegesEnum } from '@src/common/enums';
 import { IPermission } from '@src/management/interfaces';
 
 export const staffPermissions: IPermission[] = [
