@@ -15,7 +15,7 @@ export class AuthService {
     private readonly _jwtService: JwtService,
   ) {}
 
-  async signIn(signInDto: SignInDto): Promise<{ token: string }> {
+  async signIn(signInDto: SignInDto): Promise<string> {
     const staffMember = await this._prismaService.staff.findUnique({
       where: {
         email: signInDto.email,
@@ -42,6 +42,6 @@ export class AuthService {
       privileges: staffMember.privileges,
     };
     const token = await this._jwtService.signAsync(payload);
-    return { token };
+    return token;
   }
 }

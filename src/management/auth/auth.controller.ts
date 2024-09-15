@@ -9,7 +9,7 @@ export class AuthController {
   constructor(private readonly _authService: AuthService) {}
 
   @Post('/signin')
-  signIn(@Body() signInDto: SignInDto): Promise<{ token: string }> {
+  signIn(@Body() signInDto: SignInDto): Promise<string> {
     return this._authService.signIn(signInDto);
   }
 }
