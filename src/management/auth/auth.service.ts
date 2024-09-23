@@ -37,6 +37,8 @@ export class AuthService {
 
     const payload = {
       id: staffMember.id,
+      name: staffMember.name,
+      lastname: staffMember.lastname,
       email: staffMember.email,
       role: staffMember.role,
       privileges: staffMember.privileges,
