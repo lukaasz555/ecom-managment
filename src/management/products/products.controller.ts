@@ -30,6 +30,8 @@ export class ProductsController {
   @Get()
   @ApiQuery({ name: 'page', required: false, type: Number })
   @ApiQuery({ name: 'limit', required: false, type: Number })
+  @ApiQuery({ name: 'categories', required: false, type: Array })
+  @ApiQuery({ name: 'search', required: false, type: String })
   getProducts(
     @Query() query: Record<string, string>,
   ): Promise<IPaginationResult<ProductDto>> {
