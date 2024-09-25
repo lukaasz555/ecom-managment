@@ -58,7 +58,7 @@ export class ProductsPagination
         .map((y) => parseInt(y));
       this.setCategoriesIds(categoriesIds);
     }
-    if (query.search) {
+    if (query.search && query.search.trim()) {
       this.search = query.search;
     }
   }
