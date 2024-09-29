@@ -9,6 +9,7 @@ import { StoreModule } from './store/store.module';
 import { ConfigModule } from '@nestjs/config';
 import { ManagementModule } from './management/management.module';
 import { LoggerMiddleware } from './common/middleware/logger.middleware';
+import { HealthModule } from './health/health.module';
 
 @Module({
   imports: [
@@ -27,6 +28,7 @@ import { LoggerMiddleware } from './common/middleware/logger.middleware';
     }),
     ManagementModule,
     StoreModule,
+    HealthModule,
   ],
   controllers: [],
   providers: [],
