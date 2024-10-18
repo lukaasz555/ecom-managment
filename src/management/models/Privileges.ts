@@ -1,6 +1,6 @@
 import { ModulesEnum } from '@src/common/enums/modules.enum';
 import { PrivilegesEnum } from '@src/common/enums/privileges.enum';
-import { PrivilegesType } from '../types/privileges.type';
+import { PrivilegesType } from '../types/Privileges.type';
 
 export class Privileges {
   [ModulesEnum.CUSTOMERS] = PrivilegesEnum.NOT_ALLOWED;
