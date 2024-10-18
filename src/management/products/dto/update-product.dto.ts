@@ -1,5 +1,5 @@
-import { CreateCategoryDto } from '@src/management/categories/dto';
 import { IsNotEmpty, IsNumber } from 'class-validator';
+import { CreateCategoryDto } from '../../categories/dto/create-category.dto';
 
 export class UpdateProductDto extends CreateCategoryDto {
   @IsNumber()

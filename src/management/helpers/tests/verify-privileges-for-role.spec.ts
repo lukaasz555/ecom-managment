@@ -1,7 +1,9 @@
-import { ModulesEnum, PrivilegesEnum, RolesEnum } from '@src/common/enums';
 import { UpdatePrivilegesDto } from '@src/management/staff/dto/update-privileges.dto';
-import { getBasePrivileges } from '@src/management/staff/helpers';
 import { verifyPrivilegesForRole } from '@src/management/helpers/verify-privileges-for-role';
+import { ModulesEnum } from '@src/common/enums/modules.enum';
+import { PrivilegesEnum } from '@src/common/enums/privileges.enum';
+import { RolesEnum } from '@src/common/enums/roles.enum';
+import { getBasePrivileges } from '@src/management/staff/helpers/get-base-privileges';
 
 describe('verifyPrivilegesForRole', () => {
   it('should return false - there is no possibility to change privileges for the admin role', () => {

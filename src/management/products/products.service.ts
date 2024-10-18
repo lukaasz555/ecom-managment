@@ -1,9 +1,7 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { PrismaService } from '@src/prisma/prisma.service';
-import { CreateProductDto, ProductDto, UpdateProductDto } from './dto';
 import { CategoriesService } from '../categories/categories.service';
 import { ProductsPagination } from './models/products-pagination';
-import { IPaginationResult } from '@src/common/interfaces';
 
 @Injectable()
 export class ProductsService {

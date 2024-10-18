@@ -1,8 +1,9 @@
-import { ModulesEnum, PrivilegesEnum } from '@src/common/enums';
-import { PrivilegesType } from '@src/management/types';
+import { ModulesEnum } from '@src/common/enums/modules.enum';
+import { PrivilegesEnum } from '@src/common/enums/privileges.enum';
+import { PrivilegesType } from '../types/privileges.type';
+
 export class Privileges {
   [ModulesEnum.CUSTOMERS] = PrivilegesEnum.NOT_ALLOWED;
-  [ModulesEnum.STAFF_MEMBERS] = PrivilegesEnum.NOT_ALLOWED;
   [ModulesEnum.PRODUCTS] = PrivilegesEnum.NOT_ALLOWED;
   [ModulesEnum.ORDERS] = PrivilegesEnum.NOT_ALLOWED;
   [ModulesEnum.REPORTS] = PrivilegesEnum.NOT_ALLOWED;
@@ -10,6 +11,7 @@ export class Privileges {
   [ModulesEnum.DISCOUNTS] = PrivilegesEnum.NOT_ALLOWED;
   [ModulesEnum.PAYMENTS] = PrivilegesEnum.NOT_ALLOWED;
   [ModulesEnum.AUTH] = PrivilegesEnum.NOT_ALLOWED;
+  [ModulesEnum.STAFF_MEMBERS] = PrivilegesEnum.NOT_ALLOWED;
   [ModulesEnum.ACCOUNT] = PrivilegesEnum.NOT_ALLOWED;
   [ModulesEnum.CATEGORIES] = PrivilegesEnum.NOT_ALLOWED;
 

@@ -1,4 +1,5 @@
-import { RolesEnum, PrivilegesEnum } from '@src/common/enums';
+import { PrivilegesEnum } from '@src/common/enums/privileges.enum';
+import { RolesEnum } from '@src/common/enums/roles.enum';
 
 export interface IPermission {
   methodName: string;

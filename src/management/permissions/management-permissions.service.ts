@@ -1,11 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import { IPermission } from '../interfaces';
-import { ModulesEnum } from '@src/common/enums';
-import {
-  categoriesPermissions,
-  staffPermissions,
-  productsPermissions,
-} from './data';
+import { ModulesEnum } from '@src/common/enums/modules.enum';
+import { IPermission } from '../interfaces/IPermission';
+import { categoriesPermissions } from './data/categories.permissions';
+import { productsPermissions } from './data/products.permissions';
+import { staffPermissions } from './data/staff.permissions';
 
 @Injectable()
 export class ManagementPermissionsService {

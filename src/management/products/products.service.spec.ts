@@ -6,10 +6,11 @@ import { PermissionsGuard } from '../guards/permissions-guard';
 import { PrismaService } from '@src/prisma/prisma.service';
 import { prismaMock } from '@src/singleton';
 import { mockProducts } from './data/mock-products';
-import { CreateProductDto, ProductDto } from './dto';
-import { Product } from '@prisma/client';
 import { HttpException, HttpStatus } from '@nestjs/common';
+import { CreateProductDto } from './dto/create-product.dto';
+import { ProductDto } from './dto/product.dto';
 import { ProductsPagination } from './models/products-pagination';
+import { Product } from '@prisma/client';
 
 function returnMockPaginationData(page: number, limit: number): ProductDto[] {
   const start = (page - 1) * limit;

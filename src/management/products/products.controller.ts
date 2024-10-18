@@ -12,11 +12,13 @@ import {
 } from '@nestjs/common';
 import { ApiQuery, ApiSecurity, ApiTags } from '@nestjs/swagger';
 import { PermissionsGuard } from '../guards/permissions-guard';
-import { CreateProductDto, ProductDto, UpdateProductDto } from './dto';
 import { ProductsService } from './products.service';
-import { ModulesEnum } from '@src/common/enums';
 import { ProductsPagination } from './models/products-pagination';
-import { IPaginationResult } from '@src/common/interfaces';
+import { ModulesEnum } from '@src/common/enums/modules.enum';
+import { IPaginationResult } from '@src/common/interfaces/pagination-result';
+import { CreateProductDto } from './dto/create-product.dto';
+import { ProductDto } from './dto/product.dto';
+import { UpdateProductDto } from './dto/update-product.dto';
 
 const MODULE_NAME = `management/${ModulesEnum.PRODUCTS}`;
 

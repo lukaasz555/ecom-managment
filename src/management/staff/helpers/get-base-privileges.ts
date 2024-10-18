@@ -1,4 +1,6 @@
-import { ModulesEnum, PrivilegesEnum, RolesEnum } from '@src/common/enums';
+import { ModulesEnum } from '@src/common/enums/modules.enum';
+import { PrivilegesEnum } from '@src/common/enums/privileges.enum';
+import { RolesEnum } from '@src/common/enums/roles.enum';
 import { PrivilegesType } from '@src/management/types';
 
 export const getBasePrivileges = (role: RolesEnum): PrivilegesType => {

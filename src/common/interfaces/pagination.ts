@@ -1,4 +1,4 @@
-import { IPaginationResult } from '.';
+import { IPaginationResult } from './pagination-result';
 
 export interface IPagination<T> {
   items: T[];

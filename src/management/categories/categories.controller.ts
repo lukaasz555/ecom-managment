@@ -11,9 +11,11 @@ import {
 } from '@nestjs/common';
 import { ApiSecurity, ApiTags } from '@nestjs/swagger';
 import { CategoriesService } from './categories.service';
-import { CategoryDto, CreateCategoryDto, UpdateCategoryDto } from './dto';
 import { PermissionsGuard } from '../guards/permissions-guard';
-import { ModulesEnum } from '@src/common/enums';
+import { ModulesEnum } from '@src/common/enums/modules.enum';
+import { CategoryDto } from './dto/category.dto';
+import { UpdateCategoryDto } from './dto/update-category.dto';
+import { CreateCategoryDto } from './dto/create-category.dto';
 
 const MODULE_NAME = `management/${ModulesEnum.CATEGORIES}`;
 

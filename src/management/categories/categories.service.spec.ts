@@ -1,3 +1,4 @@
+import { Category } from '@prisma/client';
 import { Test, TestingModule } from '@nestjs/testing';
 import { CategoriesService } from './categories.service';
 import { PrismaService } from '@src/prisma/prisma.service';
@@ -5,10 +6,9 @@ import { prismaMock } from '@src/singleton';
 import { CategoriesController } from './categories.controller';
 import { ManagementPermissionsService } from '../permissions/management-permissions.service';
 import { PermissionsGuard } from '../guards/permissions-guard';
-import { Category } from '@prisma/client';
 import { HttpException, HttpStatus } from '@nestjs/common';
 import { CategoryDto } from './dto/category.dto';
-import { UpdateCategoryDto } from './dto';
+import { UpdateCategoryDto } from './dto/update-category.dto';
 
 interface IDeleted {
   deletedAt: Date | null;
