@@ -1,4 +1,4 @@
-import { ProductDto } from '../dto';
+import { ProductDto } from '../dto/product.dto';
 
 export const mockProducts: ProductDto[] = [
   {

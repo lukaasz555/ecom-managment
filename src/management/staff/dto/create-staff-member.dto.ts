@@ -1,10 +1,10 @@
+import { RolesEnum } from '@src/common/enums/roles.enum';
 import {
   IsEmail,
   IsNotEmpty,
   IsString,
   IsStrongPassword,
 } from 'class-validator';
-import { RolesEnum } from '@src/common/enums';
 
 export class CreateStaffMemberDto {
   @IsString()

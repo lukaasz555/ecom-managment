@@ -1,11 +1,9 @@
-import { PaginationData } from '@src/common/models';
-import { ProductDto } from '../dto';
-import {
-  IPrismaQueryBuilder,
-  ISearchable,
-  ISortable,
-} from '@src/common/interfaces';
-import { PrismaQuery } from '@src/common/types';
+import { IPrismaQueryBuilder } from '@src/common/interfaces/prisma-query-builder';
+import { ISearchable } from '@src/common/interfaces/searchable';
+import { ISortable } from '@src/common/interfaces/sortable';
+import { PaginationData } from '@src/common/models/pagination-data';
+import { PrismaQuery } from '@src/common/types/prisma-query';
+import { ProductDto } from '../dto/product.dto';
 
 export class ProductsPagination
   extends PaginationData<ProductDto>

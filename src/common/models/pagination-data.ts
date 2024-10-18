@@ -1,4 +1,5 @@
-import { IPagination, IPaginationResult } from '../interfaces';
+import { IPaginationResult } from '../interfaces/pagination-result';
+import { IPagination } from './../interfaces/pagination';
 
 export class PaginationData<T> implements IPagination<T> {
   items: T[];

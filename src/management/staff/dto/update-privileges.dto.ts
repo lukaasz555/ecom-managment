@@ -1,4 +1,5 @@
-import { ModulesEnum, PrivilegesEnum } from '@src/common/enums';
+import { ModulesEnum } from '@src/common/enums/modules.enum';
+import { PrivilegesEnum } from '@src/common/enums/privileges.enum';
 import { IsEnum, IsNotEmpty } from 'class-validator';
 
 export class UpdatePrivilegesDto {

@@ -15,7 +15,7 @@ import { CreateStaffMemberDto } from './dto/create-staff-member.dto';
 import { StaffMemberDto } from './dto/staff-member.dto';
 import { PermissionsGuard } from '../guards/permissions-guard';
 import { UpdatePrivilegesDto } from './dto/update-privileges.dto';
-import { ModulesEnum } from '@src/common/enums';
+import { ModulesEnum } from '@src/common/enums/modules.enum';
 
 const MODULE_NAME = `management/${ModulesEnum.STAFF_MEMBERS}`;
 
