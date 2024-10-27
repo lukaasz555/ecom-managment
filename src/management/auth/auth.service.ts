@@ -7,12 +7,14 @@ import { PrismaService } from 'src/prisma/prisma.service';
 import { SignInDto } from './dto/sign-in.dto';
 import { JwtService } from '@nestjs/jwt';
 import { validatePassword } from '@src/common/helpers/bcrypt.helpers';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class AuthService {
   constructor(
     private readonly _prismaService: PrismaService,
     private readonly _jwtService: JwtService,
+    private readonly _configService: ConfigService,
   ) {}
 
   async signIn(signInDto: SignInDto): Promise<string> {
@@ -37,11 +39,15 @@ export class AuthService {
 
     const payload = {
       id: staffMember.id,
+      name: staffMember.name,
+      lastname: staffMember.lastname,
       email: staffMember.email,
       role: staffMember.role,
       privileges: staffMember.privileges,
     };
-    const token = await this._jwtService.signAsync(payload);
+    const token = await this._jwtService.signAsync(payload, {
+      expiresIn: this._configService.getOrThrow('JWT_EXPIRATION_TIME'),
+    });
     return token;
   }
 }

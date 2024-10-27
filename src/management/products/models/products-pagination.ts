@@ -56,6 +56,9 @@ export class ProductsPagination
         .map((y) => parseInt(y));
       this.setCategoriesIds(categoriesIds);
     }
+    if (query.search && query.search.trim()) {
+      this.search = query.search;
+    }
   }
 
   buildPrismaQuery(): PrismaQuery {
@@ -65,6 +68,13 @@ export class ProductsPagination
       Object.assign(where, {
         categoryId: {
           in: this.categoriesIds,
+        },
+      });
+    }
+    if (this.search) {
+      Object.assign(where, {
+        title: {
+          contains: this.search,
         },
       });
     }
