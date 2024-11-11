@@ -1,9 +1,6 @@
-import { IsEmail, IsNumber, IsString } from 'class-validator';
+import { IsEmail, IsString } from 'class-validator';
 
 export class UpdateStaffMemberDto {
-  @IsNumber()
-  id: number;
-
   @IsString()
   name: string;
 
@@ -11,7 +8,7 @@ export class UpdateStaffMemberDto {
   lastname: string;
 
   @IsString()
-  phone: string;
+  phoneNumber: string;
 
   @IsString()
   @IsEmail()
