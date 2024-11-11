@@ -28,4 +28,9 @@ export const staffPermissions: IPermission[] = [
     allowedRoles: [RolesEnum.ADMIN, RolesEnum.MANAGER],
     requiredPrivelege: PrivilegesEnum.FULL,
   },
+  {
+    methodName: 'updateStaffMember',
+    allowedRoles: [RolesEnum.ADMIN, RolesEnum.MANAGER],
+    requiredPrivelege: PrivilegesEnum.MANAGE,
+  },
 ];

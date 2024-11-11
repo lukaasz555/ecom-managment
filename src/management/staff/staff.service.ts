@@ -13,6 +13,7 @@ import { StaffMemberFactory } from './factories/staff-member-factory';
 import { UpdatePrivilegesDto } from './dto/update-privileges.dto';
 import { verifyPrivilegesForRole } from '@src/management/helpers/verify-privileges-for-role';
 import { RolesEnum } from '@src/common/enums/roles.enum';
+import { UpdateStaffMemberDto } from './dto/update-staff-member.dto';
 
 @Injectable()
 export class StaffService {
@@ -89,6 +90,30 @@ export class StaffService {
         privileges: dataFromDto,
       },
     });
+  }
+
+  async updateStaffMember(
+    staffId: number,
+    updateStaffMemberDto: UpdateStaffMemberDto,
+  ): Promise<StaffMemberDto> {
+    const member = await this._prismaService.staff.findFirstOrThrow({
+      where: {
+        id: staffId,
+      },
+    });
+
+    if (!member) {
+      throw new NotFoundException('Staff member not found');
+    }
+
+    const updatedMember = await this._prismaService.staff.update({
+      where: {
+        id: staffId,
+      },
+      data: updateStaffMemberDto,
+    });
+
+    return new StaffMemberDto(updatedMember);
   }
 
   async createStaffMember(

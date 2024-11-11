@@ -16,6 +16,7 @@ import { StaffMemberDto } from './dto/staff-member.dto';
 import { PermissionsGuard } from '../guards/permissions-guard';
 import { UpdatePrivilegesDto } from './dto/update-privileges.dto';
 import { ModulesEnum } from '@src/common/enums/modules.enum';
+import { UpdateStaffMemberDto } from './dto/update-staff-member.dto';
 
 const MODULE_NAME = `management/${ModulesEnum.STAFF_MEMBERS}`;
 
@@ -56,5 +57,13 @@ export class StaffController {
     @Body() createStaffMemberDto: CreateStaffMemberDto,
   ): Promise<StaffMemberDto> {
     return this._staffService.createStaffMember(createStaffMemberDto);
+  }
+
+  @Patch(':staffId')
+  updateStaffMember(
+    @Param('staffId', ParseIntPipe) staffId: number,
+    @Body() staffMember: UpdateStaffMemberDto,
+  ): Promise<StaffMemberDto> {
+    return this._staffService.updateStaffMember(staffId, staffMember);
   }
 }
