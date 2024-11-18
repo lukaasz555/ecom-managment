@@ -10,4 +10,5 @@ export enum ModulesEnum {
   AUTH = 'auth',
   ACCOUNT = 'account',
   CATEGORIES = 'categories',
+  PERMISSIONS = 'permissions',
 }
