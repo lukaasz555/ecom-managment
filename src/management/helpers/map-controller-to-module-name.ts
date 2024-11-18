@@ -24,5 +24,7 @@ export const mapControllerToModuleName = (controllerName: string) => {
       return ModulesEnum.PAYMENTS;
     case 'CategoriesController':
       return ModulesEnum.CATEGORIES;
+    case 'ManagementPermissionsController':
+      return ModulesEnum.PERMISSIONS;
   }
 };

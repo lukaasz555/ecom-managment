@@ -1,14 +1,9 @@
 import { ModulesEnum } from '@src/common/enums/modules.enum';
 import { PrivilegesEnum } from '@src/common/enums/privileges.enum';
 import { RolesEnum } from '@src/common/enums/roles.enum';
+import { RolePrivilegeLimitType } from '../types/role-privilege-limit.type';
 
-type RolePrivilegeLimit = {
-  [role in RolesEnum]: {
-    [module in ModulesEnum]?: PrivilegesEnum[];
-  };
-};
-
-export const rolePrivelegeLimits: RolePrivilegeLimit = {
+export const rolePrivelegeLimits: RolePrivilegeLimitType = {
   [RolesEnum.ADMIN]: {}, // admin always has full access to all modules
   [RolesEnum.MANAGER]: {
     [ModulesEnum.CUSTOMERS]: [
@@ -35,6 +30,7 @@ export const rolePrivelegeLimits: RolePrivilegeLimit = {
       PrivilegesEnum.READONLY,
       PrivilegesEnum.NOT_ALLOWED,
     ],
+    [ModulesEnum.PERMISSIONS]: [PrivilegesEnum.READONLY],
   },
   [RolesEnum.ASSISTANT]: {
     [ModulesEnum.CUSTOMERS]: [
@@ -69,5 +65,6 @@ export const rolePrivelegeLimits: RolePrivilegeLimit = {
       PrivilegesEnum.READONLY,
       PrivilegesEnum.NOT_ALLOWED,
     ],
+    [ModulesEnum.PERMISSIONS]: [PrivilegesEnum.READONLY],
   },
 };
