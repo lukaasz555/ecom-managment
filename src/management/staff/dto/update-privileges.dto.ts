@@ -1,62 +1,36 @@
-import { ModulesEnum } from '@src/common/enums/modules.enum';
 import { PrivilegesEnum } from '@src/common/enums/privileges.enum';
+import { DashboardModulesEnum } from '@src/management/enums/dashboard-modules.enum';
+import { IManagementPrivileges } from '@src/management/interfaces/IManagementPrivileges';
 import { IsEnum, IsNotEmpty } from 'class-validator';
 
-export class UpdatePrivilegesDto {
+export class UpdatePrivilegesDto implements IManagementPrivileges {
   @IsNotEmpty()
   @IsEnum(PrivilegesEnum)
-  [ModulesEnum.ORDERS]: PrivilegesEnum;
+  [DashboardModulesEnum.PRODUCTS]: PrivilegesEnum;
 
   @IsNotEmpty()
   @IsEnum(PrivilegesEnum)
-  [ModulesEnum.CUSTOMERS]: PrivilegesEnum;
+  [DashboardModulesEnum.STAFF_MEMBERS]: PrivilegesEnum;
 
   @IsNotEmpty()
   @IsEnum(PrivilegesEnum)
-  [ModulesEnum.DISCOUNTS]: PrivilegesEnum;
+  [DashboardModulesEnum.CATEGORIES]: PrivilegesEnum;
 
-  @IsNotEmpty()
-  @IsEnum(PrivilegesEnum)
-  [ModulesEnum.PAYMENTS]: PrivilegesEnum;
-
-  @IsNotEmpty()
-  @IsEnum(PrivilegesEnum)
-  [ModulesEnum.PRODUCTS]: PrivilegesEnum;
-
-  @IsNotEmpty()
-  @IsEnum(PrivilegesEnum)
-  [ModulesEnum.REPORTS]: PrivilegesEnum;
-
-  @IsNotEmpty()
-  @IsEnum(PrivilegesEnum)
-  [ModulesEnum.SETTINGS]: PrivilegesEnum;
-
-  @IsNotEmpty()
-  @IsEnum(PrivilegesEnum)
-  [ModulesEnum.STAFF_MEMBERS]: PrivilegesEnum;
-
-  getPrivilegesForUpdate(): Partial<Record<ModulesEnum, PrivilegesEnum>> {
+  getPrivilegesForUpdate(): Partial<
+    Record<DashboardModulesEnum, PrivilegesEnum>
+  > {
     return {
-      [ModulesEnum.ORDERS]: this[ModulesEnum.ORDERS],
-      [ModulesEnum.CUSTOMERS]: this[ModulesEnum.CUSTOMERS],
-      [ModulesEnum.DISCOUNTS]: this[ModulesEnum.DISCOUNTS],
-      [ModulesEnum.PAYMENTS]: this[ModulesEnum.PAYMENTS],
-      [ModulesEnum.PRODUCTS]: this[ModulesEnum.PRODUCTS],
-      [ModulesEnum.REPORTS]: this[ModulesEnum.REPORTS],
-      [ModulesEnum.SETTINGS]: this[ModulesEnum.SETTINGS],
-      [ModulesEnum.STAFF_MEMBERS]: this[ModulesEnum.STAFF_MEMBERS],
+      [DashboardModulesEnum.PRODUCTS]: this[DashboardModulesEnum.PRODUCTS],
+      [DashboardModulesEnum.STAFF_MEMBERS]:
+        this[DashboardModulesEnum.STAFF_MEMBERS],
+      [DashboardModulesEnum.CATEGORIES]: this[DashboardModulesEnum.CATEGORIES],
     };
   }
 
-  setPrivileges(privileges: Record<ModulesEnum, PrivilegesEnum>) {
-    this[ModulesEnum.ORDERS] = privileges[ModulesEnum.ORDERS];
-    this[ModulesEnum.CUSTOMERS] = privileges[ModulesEnum.CUSTOMERS];
-    this[ModulesEnum.DISCOUNTS] = privileges[ModulesEnum.DISCOUNTS];
-    this[ModulesEnum.PAYMENTS] = privileges[ModulesEnum.PAYMENTS];
-    this[ModulesEnum.PRODUCTS] = privileges[ModulesEnum.PRODUCTS];
-    this[ModulesEnum.REPORTS] = privileges[ModulesEnum.REPORTS];
-    this[ModulesEnum.SETTINGS] = privileges[ModulesEnum.SETTINGS];
-    this[ModulesEnum.STAFF_MEMBERS] = privileges[ModulesEnum.STAFF_MEMBERS];
-    this[ModulesEnum.CATEGORIES] = privileges[ModulesEnum.CATEGORIES];
+  setPrivileges(privileges: Record<DashboardModulesEnum, PrivilegesEnum>) {
+    this[DashboardModulesEnum.STAFF_MEMBERS] =
+      privileges[DashboardModulesEnum.STAFF_MEMBERS];
+    this[DashboardModulesEnum.CATEGORIES] =
+      privileges[DashboardModulesEnum.CATEGORIES];
   }
 }

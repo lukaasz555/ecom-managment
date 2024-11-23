@@ -1,8 +1,8 @@
-import { ModulesEnum } from '@src/common/enums/modules.enum';
 import { RolesEnum } from '@src/common/enums/roles.enum';
+import { DashboardModulesEnum } from '../enums/dashboard-modules.enum';
 
 export type ModuleAccessType = {
-  [key in ModulesEnum]: {
+  [key in DashboardModulesEnum]: {
     minimumRole: RolesEnum;
   };
 };

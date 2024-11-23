@@ -16,10 +16,10 @@ import { CreateStaffMemberDto } from './dto/create-staff-member.dto';
 import { StaffMemberDto } from './dto/staff-member.dto';
 import { PermissionsGuard } from '../guards/permissions-guard';
 import { UpdatePrivilegesDto } from './dto/update-privileges.dto';
-import { ModulesEnum } from '@src/common/enums/modules.enum';
 import { UpdateStaffMemberDto } from './dto/update-staff-member.dto';
+import { DashboardModulesEnum } from '../enums/dashboard-modules.enum';
 
-const MODULE_NAME = `management/${ModulesEnum.STAFF_MEMBERS}`;
+const MODULE_NAME = `management/${DashboardModulesEnum.STAFF_MEMBERS}`;
 
 @ApiSecurity('bearerAuth')
 @ApiTags(MODULE_NAME)

@@ -12,12 +12,12 @@ import {
 import { ApiSecurity, ApiTags } from '@nestjs/swagger';
 import { CategoriesService } from './categories.service';
 import { PermissionsGuard } from '../guards/permissions-guard';
-import { ModulesEnum } from '@src/common/enums/modules.enum';
 import { CategoryDto } from './dto/category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
 import { CreateCategoryDto } from './dto/create-category.dto';
+import { DashboardModulesEnum } from '../enums/dashboard-modules.enum';
 
-const MODULE_NAME = `management/${ModulesEnum.CATEGORIES}`;
+const MODULE_NAME = `management/${DashboardModulesEnum.CATEGORIES}`;
 
 @ApiSecurity('bearerAuth')
 @ApiTags(MODULE_NAME)

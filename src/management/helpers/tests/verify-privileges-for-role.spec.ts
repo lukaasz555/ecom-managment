@@ -1,9 +1,9 @@
 import { UpdatePrivilegesDto } from '@src/management/staff/dto/update-privileges.dto';
 import { verifyPrivilegesForRole } from '@src/management/helpers/verify-privileges-for-role';
-import { ModulesEnum } from '@src/common/enums/modules.enum';
 import { PrivilegesEnum } from '@src/common/enums/privileges.enum';
 import { RolesEnum } from '@src/common/enums/roles.enum';
 import { getBasePrivileges } from '@src/management/staff/helpers/get-base-privileges';
+import { DashboardModulesEnum } from '@src/management/enums/dashboard-modules.enum';
 
 describe('verifyPrivilegesForRole', () => {
   it('should return false - there is no possibility to change privileges for the admin role', () => {
@@ -18,15 +18,9 @@ describe('verifyPrivilegesForRole', () => {
   const testPrivileges = new UpdatePrivilegesDto();
   testPrivileges.setPrivileges(getBasePrivileges(managerRole));
 
-  it('should return true - manager can have a full privileges in Customers Module', () => {
-    const testPrivilegesCopy = JSON.parse(JSON.stringify(testPrivileges));
-    testPrivilegesCopy[ModulesEnum.CUSTOMERS] = PrivilegesEnum.FULL;
-    expect(verifyPrivilegesForRole(managerRole, testPrivilegesCopy)).toBe(true);
-  });
-
   it('should return false - manager can not have a full privileges in Products Module', () => {
     const testPrivilegesCopy = JSON.parse(JSON.stringify(testPrivileges));
-    testPrivilegesCopy[ModulesEnum.PRODUCTS] = PrivilegesEnum.FULL;
+    testPrivilegesCopy[DashboardModulesEnum.PRODUCTS] = PrivilegesEnum.FULL;
     expect(verifyPrivilegesForRole(managerRole, testPrivilegesCopy)).toBe(
       false,
     );
@@ -34,7 +28,8 @@ describe('verifyPrivilegesForRole', () => {
 
   it('should return false - manager can not have a full privileges in StaffMembers Module', () => {
     const testPrivilegesCopy = JSON.parse(JSON.stringify(testPrivileges));
-    testPrivilegesCopy[ModulesEnum.STAFF_MEMBERS] = PrivilegesEnum.FULL;
+    testPrivilegesCopy[DashboardModulesEnum.STAFF_MEMBERS] =
+      PrivilegesEnum.FULL;
     expect(verifyPrivilegesForRole(managerRole, testPrivilegesCopy)).toBe(
       false,
     );
@@ -50,7 +45,8 @@ describe('verifyPrivilegesForRole', () => {
 
   it('should return false - assistant can not have access to Staff Members', () => {
     testPrivileges.setPrivileges(getBasePrivileges(RolesEnum.ASSISTANT));
-    testPrivileges[ModulesEnum.STAFF_MEMBERS] = PrivilegesEnum.READONLY;
+    testPrivileges[DashboardModulesEnum.STAFF_MEMBERS] =
+      PrivilegesEnum.READONLY;
     expect(verifyPrivilegesForRole(RolesEnum.ASSISTANT, testPrivileges)).toBe(
       false,
     );

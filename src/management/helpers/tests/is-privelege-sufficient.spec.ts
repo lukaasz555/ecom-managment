@@ -1,4 +1,4 @@
-import { PrivilegesEnum } from '@src/common/enums';
+import { PrivilegesEnum } from '@src/common/enums/privileges.enum';
 import { isPrivelegeSufficient } from '@src/management/helpers/is-privelege-sufficient';
 
 describe('isPrivilegeSufficient', () => {

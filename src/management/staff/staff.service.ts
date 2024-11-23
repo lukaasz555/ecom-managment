@@ -14,8 +14,8 @@ import { UpdatePrivilegesDto } from './dto/update-privileges.dto';
 import { verifyPrivilegesForRole } from '@src/management/helpers/verify-privileges-for-role';
 import { RolesEnum } from '@src/common/enums/roles.enum';
 import { UpdateStaffMemberDto } from './dto/update-staff-member.dto';
-import { ModulesEnum } from '@src/common/enums/modules.enum';
 import { PrivilegesEnum } from '@src/common/enums/privileges.enum';
+import { DashboardModulesEnum } from '../enums/dashboard-modules.enum';
 
 @Injectable()
 export class StaffService {
@@ -109,7 +109,7 @@ export class StaffService {
     }
 
     const currentPrivileges = staffMemberToUpdate.privileges as Record<
-      ModulesEnum,
+      DashboardModulesEnum,
       PrivilegesEnum
     >;
 
