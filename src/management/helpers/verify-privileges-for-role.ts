@@ -1,8 +1,8 @@
-import { ModulesEnum } from '@src/common/enums/modules.enum';
 import { PrivilegesEnum } from '@src/common/enums/privileges.enum';
 import { RolesEnum } from '@src/common/enums/roles.enum';
 import { UpdatePrivilegesDto } from '@src/management/staff/dto/update-privileges.dto';
 import { rolePrivelegeLimits } from '@src/management/utils/role-privelege-limits';
+import { DashboardModulesEnum } from '../enums/dashboard-modules.enum';
 
 export function verifyPrivilegesForRole(
   role: RolesEnum,
@@ -11,7 +11,7 @@ export function verifyPrivilegesForRole(
   if (role === RolesEnum.ADMIN) return false;
 
   for (const moduleKey in privileges) {
-    const moduleName = moduleKey as ModulesEnum;
+    const moduleName = moduleKey as DashboardModulesEnum;
     const newPrivilege: PrivilegesEnum = privileges[moduleName];
     const allowedPrivileges = rolePrivelegeLimits[role][moduleName];
 

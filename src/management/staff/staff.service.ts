@@ -14,6 +14,8 @@ import { UpdatePrivilegesDto } from './dto/update-privileges.dto';
 import { verifyPrivilegesForRole } from '@src/management/helpers/verify-privileges-for-role';
 import { RolesEnum } from '@src/common/enums/roles.enum';
 import { UpdateStaffMemberDto } from './dto/update-staff-member.dto';
+import { PrivilegesEnum } from '@src/common/enums/privileges.enum';
+import { DashboardModulesEnum } from '../enums/dashboard-modules.enum';
 
 @Injectable()
 export class StaffService {
@@ -21,10 +23,35 @@ export class StaffService {
 
   async getStaffMembers(): Promise<StaffMemberDto[]> {
     const staffMembers = await this._prismaService.staff.findMany();
-    const res = staffMembers.map(
-      (staffMember) => new StaffMemberDto(staffMember),
-    );
+    const res = staffMembers
+      .filter((staffMember) => !staffMember.deletedAt)
+      .map((staffMember) => new StaffMemberDto(staffMember));
     return res;
+  }
+
+  async deleteStaffMember(staffId: number): Promise<void> {
+    // ...
+    const staffMember = await this._prismaService.staff.findFirstOrThrow({
+      where: {
+        id: staffId,
+      },
+    });
+
+    if (!staffMember) {
+      throw new NotFoundException('Staff member not found');
+    }
+    if (staffMember.role === RolesEnum.ADMIN) {
+      throw new BadRequestException('Cannot delete an admin');
+    }
+
+    await this._prismaService.staff.update({
+      where: {
+        id: staffId,
+      },
+      data: {
+        deletedAt: new Date(),
+      },
+    });
   }
 
   async getStaffMember(staffMemberId: number): Promise<StaffMemberDto> {
@@ -81,13 +108,22 @@ export class StaffService {
       throw new BadRequestException('Cannot update privileges - invalid data');
     }
 
-    const dataFromDto = newPrivileges.getPrivilegesForUpdate();
+    const currentPrivileges = staffMemberToUpdate.privileges as Record<
+      DashboardModulesEnum,
+      PrivilegesEnum
+    >;
+
+    const updatedPrivileges = {
+      ...currentPrivileges,
+      ...newPrivileges.getPrivilegesForUpdate(),
+    };
+
     await this._prismaService.staff.update({
       where: {
         id: staffMemberId,
       },
       data: {
-        privileges: dataFromDto,
+        privileges: updatedPrivileges,
       },
     });
   }

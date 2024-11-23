@@ -1,20 +1,12 @@
-import { ModulesEnum } from '@src/common/enums/modules.enum';
 import { PrivilegesEnum } from '@src/common/enums/privileges.enum';
 import { PrivilegesType } from '../types/Privileges.type';
+import { DashboardModulesEnum } from '../enums/dashboard-modules.enum';
+import { IManagementPrivileges } from '../interfaces/IManagementPrivileges';
 
-export class Privileges {
-  [ModulesEnum.CUSTOMERS] = PrivilegesEnum.NOT_ALLOWED;
-  [ModulesEnum.PRODUCTS] = PrivilegesEnum.NOT_ALLOWED;
-  [ModulesEnum.ORDERS] = PrivilegesEnum.NOT_ALLOWED;
-  [ModulesEnum.REPORTS] = PrivilegesEnum.NOT_ALLOWED;
-  [ModulesEnum.SETTINGS] = PrivilegesEnum.NOT_ALLOWED;
-  [ModulesEnum.DISCOUNTS] = PrivilegesEnum.NOT_ALLOWED;
-  [ModulesEnum.PAYMENTS] = PrivilegesEnum.NOT_ALLOWED;
-  [ModulesEnum.AUTH] = PrivilegesEnum.NOT_ALLOWED;
-  [ModulesEnum.STAFF_MEMBERS] = PrivilegesEnum.NOT_ALLOWED;
-  [ModulesEnum.ACCOUNT] = PrivilegesEnum.NOT_ALLOWED;
-  [ModulesEnum.CATEGORIES] = PrivilegesEnum.NOT_ALLOWED;
-  [ModulesEnum.PERMISSIONS]: PrivilegesEnum.READONLY;
+export class Privileges implements IManagementPrivileges {
+  [DashboardModulesEnum.PRODUCTS] = PrivilegesEnum.NOT_ALLOWED;
+  [DashboardModulesEnum.STAFF_MEMBERS] = PrivilegesEnum.NOT_ALLOWED;
+  [DashboardModulesEnum.CATEGORIES] = PrivilegesEnum.NOT_ALLOWED;
 
   setPrivileges(privileges: this): void {
     Object.keys(privileges).forEach((key) => {

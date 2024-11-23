@@ -14,13 +14,13 @@ import { ApiQuery, ApiSecurity, ApiTags } from '@nestjs/swagger';
 import { PermissionsGuard } from '../guards/permissions-guard';
 import { ProductsService } from './products.service';
 import { ProductsPagination } from './models/products-pagination';
-import { ModulesEnum } from '@src/common/enums/modules.enum';
 import { IPaginationResult } from '@src/common/interfaces/pagination-result';
 import { CreateProductDto } from './dto/create-product.dto';
 import { ProductDto } from './dto/product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
+import { DashboardModulesEnum } from '../enums/dashboard-modules.enum';
 
-const MODULE_NAME = `management/${ModulesEnum.PRODUCTS}`;
+const MODULE_NAME = `management/${DashboardModulesEnum.PRODUCTS}`;
 
 @ApiSecurity('bearerAuth')
 @ApiTags(MODULE_NAME)

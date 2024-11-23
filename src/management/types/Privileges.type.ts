@@ -1,6 +1,6 @@
-import { ModulesEnum } from '@src/common/enums/modules.enum';
 import { PrivilegesEnum } from '@src/common/enums/privileges.enum';
+import { DashboardModulesEnum } from '../enums/dashboard-modules.enum';
 
 export type PrivilegesType = {
-  [key in ModulesEnum]: PrivilegesEnum;
+  [key in DashboardModulesEnum]: PrivilegesEnum;
 };
