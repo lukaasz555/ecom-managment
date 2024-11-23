@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Headers,
   Param,
@@ -65,5 +66,12 @@ export class StaffController {
     @Body() staffMember: UpdateStaffMemberDto,
   ): Promise<StaffMemberDto> {
     return this._staffService.updateStaffMember(staffId, staffMember);
+  }
+
+  @Delete(':staffId')
+  deleteStaffMember(
+    @Param('staffId', ParseIntPipe) staffId: number,
+  ): Promise<void> {
+    return this._staffService.deleteStaffMember(staffId);
   }
 }
