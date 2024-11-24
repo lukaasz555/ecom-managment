@@ -16,15 +16,11 @@ export class EmailTemplateFactory {
     switch (type) {
       case EmailTemplateEnum.AUTH_RESET_PASSWORD:
         return this._forgotPasswordStrategy.generateTemplate(
-          plainToInstance(ForgotPasswordEmailOptions, payload, {
-            strategy: 'excludeAll',
-          }),
+          plainToInstance(ForgotPasswordEmailOptions, payload),
         );
       case EmailTemplateEnum.AUTH_ACTIVATION:
         return this._accountActivationStrategy.generateTemplate(
-          plainToInstance(AccountActivationEmailOptions, payload, {
-            strategy: 'excludeAll',
-          }),
+          plainToInstance(AccountActivationEmailOptions, payload),
         );
       default:
         throw new Error('Invalid template type - ' + type);
