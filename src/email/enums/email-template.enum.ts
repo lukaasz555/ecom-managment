@@ -1,0 +1,4 @@
+export enum EmailTemplateEnum {
+  AUTH_ACTIVATION = 'AUTH_ACTIVATION',
+  AUTH_RESET_PASSWORD = 'AUTH_RESET_PASSWORD',
+}
