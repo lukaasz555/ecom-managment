@@ -1,12 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { MailerSend, EmailParams, Sender, Recipient } from 'mailersend';
-
-interface ISendEmailOptions {
-  recipientAddress: string;
-  recipientNameAndLastname: string;
-  subject: string;
-  text: string;
-}
+import { ISendEmailOptions } from './interfaces/ISendEmailOptions';
+import { EmailTemplateEnum } from './enums/email-template.enum';
 
 @Injectable()
 export class EmailService {
@@ -25,7 +20,7 @@ export class EmailService {
   }
 
   async sendEmail(options: ISendEmailOptions): Promise<void> {
-    const { recipientAddress, recipientNameAndLastname, subject, text } =
+    const { recipientAddress, recipientNameAndLastname, subject, html } =
       options;
 
     const emailParams = new EmailParams();
@@ -35,9 +30,13 @@ export class EmailService {
       .setFrom(this.sentFrom)
       .setTo([recipient])
       .setSubject(subject)
-      .setText(text)
-      .setHtml('<div>Test html goes here</div>');
+      .setHtml(html);
 
     await this.mailerSend.email.send(emailParams);
+  }
+
+  generateTemplate(type: EmailTemplateEnum): string {
+    // ...
+    return `<div>template: ${type}</div>`;
   }
 }
