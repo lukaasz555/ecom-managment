@@ -10,6 +10,7 @@ import { ConfigModule } from '@nestjs/config';
 import { ManagementModule } from './management/management.module';
 import { LoggerMiddleware } from './common/middleware/logger.middleware';
 import { HealthModule } from './health/health.module';
+import { EmailModule } from './email/email.module';
 
 @Module({
   imports: [
@@ -29,6 +30,7 @@ import { HealthModule } from './health/health.module';
     ManagementModule,
     StoreModule,
     HealthModule,
+    EmailModule,
   ],
   controllers: [],
   providers: [],
