@@ -62,7 +62,7 @@ export class AuthService {
   async forgotPassword(
     forgotPasswordDto: ForgotPasswordDto,
   ): Promise<BaseResponse> {
-    const staffMember = await this._prismaService.staff.findUnique({
+    const staffMember = await this._prismaService.staff.findUniqueOrThrow({
       where: {
         email: forgotPasswordDto.email,
         deletedAt: null,

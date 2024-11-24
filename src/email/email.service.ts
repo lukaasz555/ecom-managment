@@ -1,26 +1,34 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, Injectable } from '@nestjs/common';
 import { MailerSend, EmailParams, Sender, Recipient } from 'mailersend';
 import { ISendEmailOptions } from './interfaces/ISendEmailOptions';
 import { EmailTemplateEnum } from './enums/email-template.enum';
-import { getForgotPasswordTemplate } from '@src/management/auth/templates/forgot-password.template';
-import { getAccountActivationTemplate } from '@src/management/auth/templates/account-activation.template';
-import { plainToInstance } from 'class-transformer';
-import { AccountActivationEmailOptions } from '@src/management/auth/models/account-activation-email-options';
-import { ForgotPasswordEmailOptions } from '@src/management/auth/models/forgot-password-email-options';
+import { ConfigService } from '@nestjs/config';
+import { EmailTemplateFactory } from './templates/email-template.factory';
+
+const envKeys = {
+  SENDER_ADDRESS: 'MAILERSEND_SENDER_ADDRESS',
+  SENDER_NAME: 'MAILERSEND_SENDER_NAME',
+  API_KEY: 'MAILERSEND_API_KEY',
+} as const;
 
 @Injectable()
 export class EmailService {
   private mailerSend: MailerSend;
   private sentFrom: Sender;
 
-  constructor() {
+  constructor(
+    private readonly _configService: ConfigService,
+    private readonly _emailTemplateFactory: EmailTemplateFactory,
+  ) {
     this._setupService();
   }
 
   private _setupService() {
-    const senderAddress = process.env.MAILERSEND_SENDER_ADDRESS;
-    const senderName = process.env.MAILERSEND_SENDER_NAME;
-    const apiKey = process.env.MAILERSEND_API_KEY;
+    const senderAddress = this._configService.getOrThrow(
+      envKeys.SENDER_ADDRESS,
+    );
+    const senderName = this._configService.getOrThrow(envKeys.SENDER_NAME);
+    const apiKey = this._configService.getOrThrow(envKeys.API_KEY);
 
     if (!senderAddress || !senderName || !apiKey) {
       throw new Error('EmailService - Invalid configuration');
@@ -42,22 +50,15 @@ export class EmailService {
       .setSubject(subject)
       .setHtml(html);
 
-    await this.mailerSend.email.send(emailParams);
+    try {
+      await this.mailerSend.email.send(emailParams);
+    } catch (err) {
+      console.error(err);
+      throw new HttpException('Error sending email', 500);
+    }
   }
 
-  generateTemplate(
-    type: EmailTemplateEnum,
-    payload: Record<string, unknown>,
-  ): string {
-    switch (type) {
-      case EmailTemplateEnum.AUTH_RESET_PASSWORD:
-        return getForgotPasswordTemplate(
-          plainToInstance(ForgotPasswordEmailOptions, payload),
-        );
-      case EmailTemplateEnum.AUTH_ACTIVATION:
-        return getAccountActivationTemplate(
-          plainToInstance(AccountActivationEmailOptions, payload),
-        );
-    }
+  generateTemplate<T>(type: EmailTemplateEnum, payload: T): string {
+    return this._emailTemplateFactory.generateTemplate(type, payload);
   }
 }
