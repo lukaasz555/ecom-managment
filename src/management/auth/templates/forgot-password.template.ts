@@ -1,4 +1,6 @@
-export function getForgotPasswordTemplate(options) {
+import { ForgotPasswordEmailOptions } from '../models/forgot-password-email-options';
+
+export function getForgotPasswordTemplate(options: ForgotPasswordEmailOptions) {
   const { recipientNameAndLastname, resetUrl } = options;
   const subject = 'Password Recovery';
 

@@ -1,5 +1,10 @@
-export function getAccountActivationTemplate(options): string {
-  const { recipientNameAndLastname, link } = options;
+import { AccountActivationEmailOptions } from '../models/account-activation-email-options';
+
+export function getAccountActivationTemplate(
+  options: AccountActivationEmailOptions,
+): string {
+  const { recipientNameAndLastname, activateUrl, subject } = options;
+
   return `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -51,12 +56,12 @@ export function getAccountActivationTemplate(options): string {
 <body>
   <div class="email-container">
     <div class="header">
-      <h1>Account activation</h1>
+      <h1>${subject}</h1>
     </div>
     <div class="content">
       <p>Hello ${recipientNameAndLastname},</p>
       <p>To activate your account you need to hit this link below:</p>
-      <p>Link should goes here... - ${link}</p>
+      <p>Link should goes here... - ${activateUrl}</p>
       <p>Best regards,<br>Your Team</p>
     </div>
     <div class="footer">
