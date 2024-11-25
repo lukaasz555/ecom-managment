@@ -8,7 +8,10 @@ import {
 import { PrismaService } from 'src/prisma/prisma.service';
 import { SignInDto } from './dto/sign-in.dto';
 import { JwtService } from '@nestjs/jwt';
-import { validatePassword } from '@src/common/helpers/bcrypt.helpers';
+import {
+  getHashedValue,
+  validateHashedValue,
+} from '@src/common/helpers/bcrypt.helpers';
 import { ConfigService } from '@nestjs/config';
 import { ForgotPasswordDto } from './dto/forgot-password.dto';
 import { EmailService } from '@src/email/email.service';
@@ -37,7 +40,7 @@ export class AuthService {
       throw new NotFoundException('Staff member not found');
     }
 
-    const isValidPassword = await validatePassword(
+    const isValidPassword = await validateHashedValue(
       signInDto.password,
       staffMember.password,
     );
@@ -73,8 +76,22 @@ export class AuthService {
     if (!staffMember) {
       throw new NotFoundException('Staff member not found');
     }
+    const { token, hashedToken } = await this._generateRecoveryToken();
+    const emailOptions = this._getForgotPasswordEmailOptions(
+      staffMember,
+      token,
+    );
 
-    const emailOptions = this._getForgotPasswordEmailOptions(staffMember);
+    const expiresAt = new Date();
+    expiresAt.setMinutes(expiresAt.getMinutes() + 30);
+
+    await this._prismaService.staffPasswordRecovery.create({
+      data: {
+        staffId: staffMember.id,
+        token: hashedToken,
+        expiresAt,
+      },
+    });
 
     try {
       await this._emailService.sendEmail(emailOptions);
@@ -93,7 +110,11 @@ export class AuthService {
 
   private _getForgotPasswordEmailOptions(
     staffMember: Staff,
+    recoveryToken: string,
   ): ISendEmailOptions {
+    // ! temp. solution with hardcoded url
+    const resetUrl = `http://localhost:4004/api/v1/management/auth/reset-password?token=${recoveryToken}`;
+
     const emailOptions: ISendEmailOptions = {
       recipientAddress: staffMember.email,
       recipientNameAndLastname: `${staffMember.name} ${staffMember.lastname}`,
@@ -101,7 +122,7 @@ export class AuthService {
         EmailTemplateEnum.AUTH_RESET_PASSWORD,
         {
           recipientNameAndLastname: `${staffMember.name} ${staffMember.lastname}`,
-          resetUrl: this._generateRecoveryURL(),
+          resetUrl,
           subject: '77store @ Password Recovery',
         },
       ),
@@ -110,8 +131,12 @@ export class AuthService {
     return emailOptions;
   }
 
-  private _generateRecoveryURL(): string {
-    // TODO implement this methofd
-    return 'http://localhost:3000/reset-password';
+  private async _generateRecoveryToken(): Promise<{
+    token: string;
+    hashedToken: string;
+  }> {
+    const token = crypto.randomUUID().toString();
+    const hashedToken = await getHashedValue(token);
+    return { token, hashedToken };
   }
 }
