@@ -15,6 +15,7 @@ import { EmailService } from '@src/email/email.service';
 import { BaseResponse } from '@src/common/types/base-response.type';
 import { ISendEmailOptions } from '@src/email/interfaces/ISendEmailOptions';
 import { EmailTemplateEnum } from '@src/email/enums/email-template.enum';
+import { Staff } from '@prisma/client';
 
 @Injectable()
 export class AuthService {
@@ -73,19 +74,7 @@ export class AuthService {
       throw new NotFoundException('Staff member not found');
     }
 
-    const emailOptions: ISendEmailOptions = {
-      recipientAddress: staffMember.email,
-      recipientNameAndLastname: `${staffMember.name} ${staffMember.lastname}`,
-      html: this._emailService.generateTemplate(
-        EmailTemplateEnum.AUTH_RESET_PASSWORD,
-        {
-          recipientNameAndLastname: `${staffMember.name} ${staffMember.lastname}`,
-          resetUrl: this._generateRecoveryURL(),
-          subject: 'Test Password Recovery123',
-        },
-      ),
-      subject: '77store @ Password Recovery',
-    };
+    const emailOptions = this._getForgotPasswordEmailOptions(staffMember);
 
     try {
       await this._emailService.sendEmail(emailOptions);
@@ -100,6 +89,25 @@ export class AuthService {
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
+  }
+
+  private _getForgotPasswordEmailOptions(
+    staffMember: Staff,
+  ): ISendEmailOptions {
+    const emailOptions: ISendEmailOptions = {
+      recipientAddress: staffMember.email,
+      recipientNameAndLastname: `${staffMember.name} ${staffMember.lastname}`,
+      html: this._emailService.generateTemplate(
+        EmailTemplateEnum.AUTH_RESET_PASSWORD,
+        {
+          recipientNameAndLastname: `${staffMember.name} ${staffMember.lastname}`,
+          resetUrl: this._generateRecoveryURL(),
+          subject: '77store @ Password Recovery',
+        },
+      ),
+      subject: '77store @ Password Recovery',
+    };
+    return emailOptions;
   }
 
   private _generateRecoveryURL(): string {
