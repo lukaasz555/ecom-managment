@@ -6,8 +6,8 @@ export async function getHashedValue(value: string): Promise<string> {
 }
 
 export async function validateHashedValue(
-  password: string,
-  userPassword: string,
+  providedValue: string,
+  hashedValue: string,
 ): Promise<boolean> {
-  return await bcrypt.compare(password, userPassword);
+  return await bcrypt.compare(providedValue, hashedValue);
 }

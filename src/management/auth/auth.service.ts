@@ -18,7 +18,7 @@ import { EmailService } from '@src/email/email.service';
 import { BaseResponse } from '@src/common/types/base-response.type';
 import { ISendEmailOptions } from '@src/email/interfaces/ISendEmailOptions';
 import { EmailTemplateEnum } from '@src/email/enums/email-template.enum';
-import { Staff } from '@prisma/client';
+import { Staff, StaffPasswordRecovery } from '@prisma/client';
 
 @Injectable()
 export class AuthService {
@@ -106,6 +106,57 @@ export class AuthService {
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
+  }
+
+  async resetPassword(token: string): Promise<BaseResponse> {
+    // * temp. get all tokens, not filtering by usedAt nor expiresAt
+    const allRecoveryTokens =
+      await this._prismaService.staffPasswordRecovery.findMany();
+
+    let staffToken: StaffPasswordRecovery | null = null;
+
+    for (const recoveryToken of allRecoveryTokens) {
+      const isValid = await validateHashedValue(token, recoveryToken.token);
+      if (isValid) {
+        staffToken = recoveryToken;
+        break;
+      }
+    }
+
+    if (staffToken && staffToken.usedAt) {
+      throw new HttpException('Token already used', HttpStatus.BAD_REQUEST);
+    }
+    if (staffToken && staffToken.expiresAt < new Date()) {
+      throw new HttpException('Token expired', HttpStatus.BAD_REQUEST);
+    }
+    if (!staffToken || !staffToken.staffId) {
+      throw new HttpException('Invalid token', HttpStatus.BAD_REQUEST);
+    }
+
+    const staffMember = await this._prismaService.staff.findUniqueOrThrow({
+      where: {
+        id: staffToken.staffId,
+        deletedAt: null,
+      },
+    });
+
+    if (!staffMember) {
+      throw new NotFoundException('Staff member not found');
+    }
+
+    await this._prismaService.staffPasswordRecovery.update({
+      where: {
+        id: staffToken.id,
+      },
+      data: {
+        usedAt: new Date(),
+      },
+    });
+
+    return {
+      status: HttpStatus.OK,
+      message: 'Password reset successful',
+    };
   }
 
   private _getForgotPasswordEmailOptions(

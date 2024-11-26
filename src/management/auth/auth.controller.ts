@@ -1,4 +1,4 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Param, Post } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { AuthService } from './auth.service';
 import { SignInDto } from './dto/sign-in.dto';
@@ -20,5 +20,10 @@ export class AuthController {
     @Body() forgotPasswordDto: ForgotPasswordDto,
   ): Promise<BaseResponse> {
     return this._authService.forgotPassword(forgotPasswordDto);
+  }
+
+  @Post('/reset-password/:token')
+  resetPassword(@Param('token') token: string) {
+    return this._authService.resetPassword(token);
   }
 }
