@@ -19,6 +19,7 @@ import { BaseResponse } from '@src/common/types/base-response.type';
 import { ISendEmailOptions } from '@src/email/interfaces/ISendEmailOptions';
 import { EmailTemplateEnum } from '@src/email/enums/email-template.enum';
 import { Staff, StaffPasswordRecovery } from '@prisma/client';
+import { ChangePasswordDto } from './dto/change-password.dto';
 
 @Injectable()
 export class AuthService {
@@ -118,17 +119,18 @@ export class AuthService {
     for (const recoveryToken of allRecoveryTokens) {
       const isValid = await validateHashedValue(token, recoveryToken.token);
       if (isValid) {
+        console.log('IS VALID', recoveryToken);
         staffToken = recoveryToken;
         break;
       }
     }
 
-    if (staffToken && staffToken.usedAt) {
-      throw new HttpException('Token already used', HttpStatus.BAD_REQUEST);
-    }
-    if (staffToken && staffToken.expiresAt < new Date()) {
-      throw new HttpException('Token expired', HttpStatus.BAD_REQUEST);
-    }
+    // if (staffToken && staffToken.usedAt) {
+    //   throw new HttpException('Token already used', HttpStatus.BAD_REQUEST);
+    // }
+    // if (staffToken && staffToken.expiresAt < new Date()) {
+    //   throw new HttpException('Token expired', HttpStatus.BAD_REQUEST);
+    // }
     if (!staffToken || !staffToken.staffId) {
       throw new HttpException('Invalid token', HttpStatus.BAD_REQUEST);
     }
@@ -159,12 +161,44 @@ export class AuthService {
     };
   }
 
+  async changePassword(changePasswordDto: ChangePasswordDto): Promise<void> {
+    try {
+      const staffMember = await this._prismaService.staff.findUniqueOrThrow({
+        where: {
+          email: changePasswordDto.email,
+          deletedAt: null,
+        },
+      });
+
+      const hashedPassword = await getHashedValue(
+        changePasswordDto.newPassword,
+      );
+
+      await this._prismaService.staff.update({
+        where: {
+          id: staffMember.id,
+        },
+        data: {
+          password: hashedPassword,
+        },
+      });
+    } catch (err) {
+      if (err.code === 'P2025') {
+        throw new NotFoundException('Staff member not found');
+      } else
+        throw new HttpException(
+          'Internal server error',
+          HttpStatus.INTERNAL_SERVER_ERROR,
+        );
+    }
+  }
+
   private _getForgotPasswordEmailOptions(
     staffMember: Staff,
     recoveryToken: string,
   ): ISendEmailOptions {
     // ! temp. solution with hardcoded url
-    const resetUrl = `http://localhost:4004/api/v1/management/auth/reset-password?token=${recoveryToken}`;
+    const resetUrl = `http://localhost:3000/auth/reset-password?token=${recoveryToken}`;
 
     const emailOptions: ISendEmailOptions = {
       recipientAddress: staffMember.email,
