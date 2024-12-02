@@ -67,7 +67,7 @@ export class AuthService {
   async forgotPassword(
     forgotPasswordDto: ForgotPasswordDto,
   ): Promise<BaseResponse> {
-    const staffMember = await this._prismaService.staff.findUniqueOrThrow({
+    const staffMember = await this._prismaService.staff.findUnique({
       where: {
         email: forgotPasswordDto.email,
         deletedAt: null,
@@ -75,7 +75,10 @@ export class AuthService {
     });
 
     if (!staffMember) {
-      throw new NotFoundException('Staff member not found');
+      return {
+        status: HttpStatus.OK,
+        message: 'Email sent',
+      };
     }
     const { token, hashedToken } = await this._generateRecoveryToken();
     const emailOptions = this._getForgotPasswordEmailOptions(
@@ -119,18 +122,17 @@ export class AuthService {
     for (const recoveryToken of allRecoveryTokens) {
       const isValid = await validateHashedValue(token, recoveryToken.token);
       if (isValid) {
-        console.log('IS VALID', recoveryToken);
         staffToken = recoveryToken;
         break;
       }
     }
 
-    // if (staffToken && staffToken.usedAt) {
-    //   throw new HttpException('Token already used', HttpStatus.BAD_REQUEST);
-    // }
-    // if (staffToken && staffToken.expiresAt < new Date()) {
-    //   throw new HttpException('Token expired', HttpStatus.BAD_REQUEST);
-    // }
+    if (staffToken && staffToken.usedAt) {
+      throw new HttpException('Token already used', HttpStatus.BAD_REQUEST);
+    }
+    if (staffToken && staffToken.expiresAt < new Date()) {
+      throw new HttpException('Token expired', HttpStatus.BAD_REQUEST);
+    }
     if (!staffToken || !staffToken.staffId) {
       throw new HttpException('Invalid token', HttpStatus.BAD_REQUEST);
     }
