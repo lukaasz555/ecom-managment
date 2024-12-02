@@ -60,10 +60,10 @@ export class ForgotPasswordStrategy {
             <p>Hello ${payload.recipientNameAndLastname},</p>
             <p>Click here to reset your password: </p> </br>
             <a href="${payload.resetUrl}">Reset Password</a>
-            <p>Best regards,<br>Your Team</p>
+            <p><br>77store Team</p>
           </div>
           <div class="footer">
-            <p>If you have any questions, feel free to reply to this email.</p>
+            <p>If you have any questions, contact us. Do not reply to this email.</p>
           </div>
         </div>
       </body>
