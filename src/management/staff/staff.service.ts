@@ -16,10 +16,18 @@ import { RolesEnum } from '@src/common/enums/roles.enum';
 import { UpdateStaffMemberDto } from './dto/update-staff-member.dto';
 import { PrivilegesEnum } from '@src/common/enums/privileges.enum';
 import { DashboardModulesEnum } from '../enums/dashboard-modules.enum';
+import { EmailService } from '@src/email/email.service';
+import { ISendEmailOptions } from '@src/email/interfaces/ISendEmailOptions';
+import { Staff } from '@prisma/client';
+import { EmailTemplateEnum } from '@src/email/enums/email-template.enum';
+import { getHashedValue } from '@src/common/helpers/bcrypt.helpers';
 
 @Injectable()
 export class StaffService {
-  constructor(private _prismaService: PrismaService) {}
+  constructor(
+    private _prismaService: PrismaService,
+    private _emailService: EmailService,
+  ) {}
 
   async getStaffMembers(): Promise<StaffMemberDto[]> {
     const staffMembers = await this._prismaService.staff.findMany();
@@ -168,6 +176,20 @@ export class StaffService {
         data: newStaffMember,
       });
 
+      const { token, hashedToken } = await this._generateActivationToken();
+      const expiresAt = new Date();
+      expiresAt.setHours(expiresAt.getHours() + 48);
+      const emailOptions = this._getAccountActivationEmailOptions(staff, token);
+
+      await this._prismaService.staffAccountActivation.create({
+        data: {
+          staffId: staff.id,
+          token: hashedToken,
+          expiresAt,
+        },
+      });
+
+      await this._emailService.sendEmail(emailOptions);
       return new StaffMemberDto(staff);
     } catch (err) {
       if (err.code === 'P2002') {
@@ -178,5 +200,37 @@ export class StaffService {
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
+  }
+
+  private _getAccountActivationEmailOptions(
+    staffMember: Staff,
+    activationToken: string,
+  ): ISendEmailOptions {
+    // ! temp. solution with hardcoded url
+    const activateUrl = `http://localhost:3000/auth/activate-account?token=${activationToken}`;
+
+    const emailOptions: ISendEmailOptions = {
+      recipientAddress: staffMember.email,
+      recipientNameAndLastname: `${staffMember.name} ${staffMember.lastname}`,
+      html: this._emailService.generateTemplate(
+        EmailTemplateEnum.AUTH_ACTIVATION,
+        {
+          recipientNameAndLastname: `${staffMember.name} ${staffMember.lastname}`,
+          activateUrl,
+          subject: '77store @ Account Activation',
+        },
+      ),
+      subject: '77store @ Account Activation',
+    };
+    return emailOptions;
+  }
+
+  private async _generateActivationToken(): Promise<{
+    token: string;
+    hashedToken: string;
+  }> {
+    const token = crypto.randomUUID().toString();
+    const hashedToken = await getHashedValue(token);
+    return { token, hashedToken };
   }
 }
