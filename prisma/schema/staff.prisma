@@ -13,4 +13,5 @@ model Staff {
   additionalNote String?
 
   passwordRecoveries StaffPasswordRecovery[]
+  accountActivation  StaffAccountActivation?
 }
