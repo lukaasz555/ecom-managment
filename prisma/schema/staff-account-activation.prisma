@@ -1,9 +1,0 @@
-model StaffAccountActivation {
-  id        Int       @id @default(autoincrement())
-  staffId   Int       @unique
-  staff     Staff     @relation(fields: [staffId], references: [id], onDelete: Cascade)
-  token     String
-  createdAt DateTime  @default(now())
-  expiresAt DateTime
-  usedAt    DateTime?
-}

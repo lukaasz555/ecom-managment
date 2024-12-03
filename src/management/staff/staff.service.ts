@@ -20,13 +20,16 @@ import { EmailService } from '@src/email/email.service';
 import { ISendEmailOptions } from '@src/email/interfaces/ISendEmailOptions';
 import { Staff } from '@prisma/client';
 import { EmailTemplateEnum } from '@src/email/enums/email-template.enum';
-import { getHashedValue } from '@src/common/helpers/bcrypt.helpers';
+import { ConfigService } from '@nestjs/config';
+import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class StaffService {
   constructor(
     private _prismaService: PrismaService,
     private _emailService: EmailService,
+    private _configService: ConfigService,
+    private _jwtService: JwtService,
   ) {}
 
   async getStaffMembers(): Promise<StaffMemberDto[]> {
@@ -176,18 +179,8 @@ export class StaffService {
         data: newStaffMember,
       });
 
-      const { token, hashedToken } = await this._generateActivationToken();
-      const expiresAt = new Date();
-      expiresAt.setHours(expiresAt.getHours() + 48);
+      const token = await this._generateActivationToken(staff.id);
       const emailOptions = this._getAccountActivationEmailOptions(staff, token);
-
-      await this._prismaService.staffAccountActivation.create({
-        data: {
-          staffId: staff.id,
-          token: hashedToken,
-          expiresAt,
-        },
-      });
 
       await this._emailService.sendEmail(emailOptions);
       return new StaffMemberDto(staff);
@@ -225,12 +218,13 @@ export class StaffService {
     return emailOptions;
   }
 
-  private async _generateActivationToken(): Promise<{
-    token: string;
-    hashedToken: string;
-  }> {
-    const token = crypto.randomUUID().toString();
-    const hashedToken = await getHashedValue(token);
-    return { token, hashedToken };
+  private async _generateActivationToken(staffId: number): Promise<string> {
+    return await this._jwtService.signAsync(
+      { staffId },
+      {
+        expiresIn: '48h',
+        secret: this._configService.getOrThrow('JWT_SECRET_TOKEN'),
+      },
+    );
   }
 }
