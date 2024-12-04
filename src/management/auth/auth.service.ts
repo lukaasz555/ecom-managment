@@ -195,6 +195,45 @@ export class AuthService {
     }
   }
 
+  async activateAccount(token: string) {
+    try {
+      const decodedToken = (await this._jwtService.verifyAsync(token)) as {
+        staffId: number;
+        exp: number;
+      };
+
+      if (!decodedToken) {
+        throw new HttpException('Invalid token', HttpStatus.BAD_REQUEST);
+      }
+      if (decodedToken.exp < Math.floor(Date.now() / 1000)) {
+        throw new HttpException('Token expired', HttpStatus.BAD_REQUEST);
+      }
+
+      const staffMember = await this._prismaService.staff.findUnique({
+        where: {
+          id: decodedToken.staffId,
+        },
+      });
+
+      if (!staffMember) {
+        throw new NotFoundException('Staff member not found');
+      }
+
+      await this._prismaService.staff.update({
+        where: {
+          id: decodedToken.staffId,
+        },
+        data: {
+          activatedAt: new Date(),
+        },
+      });
+
+      return { status: HttpStatus.OK, message: 'Account activated' };
+    } catch (err) {
+      throw new HttpException('Invalid token', HttpStatus.BAD_REQUEST);
+    }
+  }
+
   private _getForgotPasswordEmailOptions(
     staffMember: Staff,
     recoveryToken: string,
