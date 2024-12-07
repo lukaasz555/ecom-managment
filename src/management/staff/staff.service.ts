@@ -161,14 +161,12 @@ export class StaffService {
       throw new NotFoundException('Staff member not found');
     }
 
-    const { phoneNumber, ...updateData } = updateStaffMemberDto;
     const updatedMember = await this._prismaService.staff.update({
       where: {
         id: staffId,
       },
       data: {
-        ...updateData,
-        phone: phoneNumber,
+        ...updateStaffMemberDto,
       },
     });
 
