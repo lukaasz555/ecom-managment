@@ -11,6 +11,7 @@ model Staff {
   updatedAt      DateTime  @updatedAt
   deletedAt      DateTime?
   additionalNote String?
+  activatedAt    DateTime?
 
   passwordRecoveries StaffPasswordRecovery[]
 }

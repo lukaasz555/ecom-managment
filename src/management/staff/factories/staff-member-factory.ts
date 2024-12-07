@@ -1,8 +1,9 @@
 import { Prisma } from '@prisma/client';
 import { RolesEnum } from '@src/common/enums/roles.enum';
 import { getHashedValue } from '@src/common/helpers/bcrypt.helpers';
-import { CreateStaffMemberDto } from '../dto/create-staff-member.dto';
 import { getBasePrivileges } from '../helpers/get-base-privileges';
+import { CreateStaffMemberDto } from '../dto/create-staff-member.dto';
+import { generateRandomPassword } from '@src/common/helpers/generate-random-password';
 
 export class StaffMemberFactory {
   public createStaffMember(
@@ -23,7 +24,8 @@ export class StaffMemberFactory {
   private async _createAssistant(
     staffMember: CreateStaffMemberDto,
   ): Promise<Prisma.StaffCreateInput> {
-    const hashedPassword = await getHashedValue(staffMember.password);
+    const hashedPassword = await getHashedValue(generateRandomPassword());
+
     const assistant: Prisma.StaffCreateInput = {
       name: staffMember.name,
       lastname: staffMember.lastname,
@@ -39,7 +41,8 @@ export class StaffMemberFactory {
   private async _createManager(
     staffMember: CreateStaffMemberDto,
   ): Promise<Prisma.StaffCreateInput> {
-    const hashedPassword = await getHashedValue(staffMember.password);
+    const hashedPassword = await getHashedValue(generateRandomPassword());
+
     const manager: Prisma.StaffCreateInput = {
       name: staffMember.name,
       lastname: staffMember.lastname,
@@ -55,7 +58,8 @@ export class StaffMemberFactory {
   private async _createAdmin(
     staffMember: CreateStaffMemberDto,
   ): Promise<Prisma.StaffCreateInput> {
-    const hashedPassword = await getHashedValue(staffMember.password);
+    const hashedPassword = await getHashedValue(generateRandomPassword());
+
     const admin: Prisma.StaffCreateInput = {
       name: staffMember.name,
       lastname: staffMember.lastname,

@@ -195,6 +195,42 @@ export class AuthService {
     }
   }
 
+  async activateAccount(token: string) {
+    try {
+      const decodedToken = (await this._jwtService.verifyAsync(token)) as {
+        staffId: number;
+        exp: number;
+      };
+
+      const staffMember = await this._prismaService.staff.findUnique({
+        where: {
+          id: decodedToken.staffId,
+        },
+      });
+
+      if (!staffMember) {
+        throw new NotFoundException('Staff member not found');
+      }
+
+      if (staffMember.activatedAt) {
+        return { status: HttpStatus.OK, message: 'Account already activated' };
+      }
+
+      await this._prismaService.staff.update({
+        where: {
+          id: decodedToken.staffId,
+        },
+        data: {
+          activatedAt: new Date(),
+        },
+      });
+
+      return { status: HttpStatus.OK, message: 'Account activated' };
+    } catch (err) {
+      throw new HttpException('Invalid token', HttpStatus.BAD_REQUEST);
+    }
+  }
+
   private _getForgotPasswordEmailOptions(
     staffMember: Staff,
     recoveryToken: string,

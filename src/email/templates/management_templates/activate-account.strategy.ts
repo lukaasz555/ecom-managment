@@ -59,11 +59,11 @@ export class ActivateAccountStrategy {
           <div class="content">
             <p>Hello ${payload.recipientNameAndLastname},</p>
             <p>To activate your account you need to hit this link below:</p>
-            <p>Link should goes here... - ${payload.activateUrl}</p>
-            <p>Best regards,<br>Your Team</p>
+            <a href="${payload.activateUrl}">Account Activation</a>
+            <p><br>77store Team</p>
           </div>
           <div class="footer">
-            <p>If you have any questions, feel free to reply to this email.</p>
+            <p>If you have any questions, contact us. Do not reply to this email.</p>
           </div>
         </div>
       </body>

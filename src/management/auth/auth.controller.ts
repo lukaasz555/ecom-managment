@@ -32,4 +32,9 @@ export class AuthController {
   changePassword(@Body() changePasswordDto: ChangePasswordDto) {
     return this._authService.changePassword(changePasswordDto);
   }
+
+  @Post('/activate-account/:token')
+  activateAccount(@Param('token') token: string) {
+    return this._authService.activateAccount(token);
+  }
 }

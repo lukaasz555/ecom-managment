@@ -8,7 +8,7 @@ export class UpdateStaffMemberDto {
   lastname: string;
 
   @IsString()
-  phoneNumber: string;
+  phone: string;
 
   @IsString()
   @IsEmail()
