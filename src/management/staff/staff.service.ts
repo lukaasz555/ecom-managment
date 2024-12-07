@@ -33,10 +33,18 @@ export class StaffService {
   ) {}
 
   async getStaffMembers(): Promise<StaffMemberDto[]> {
-    const staffMembers = await this._prismaService.staff.findMany();
-    const res = staffMembers
-      .filter((staffMember) => !staffMember.deletedAt)
-      .map((staffMember) => new StaffMemberDto(staffMember));
+    const staffMembers = await this._prismaService.staff.findMany({
+      where: {
+        deletedAt: null,
+        NOT: {
+          activatedAt: null,
+        },
+      },
+    });
+
+    const res = staffMembers.map(
+      (staffMember) => new StaffMemberDto(staffMember),
+    );
     return res;
   }
 
@@ -200,7 +208,7 @@ export class StaffService {
     activationToken: string,
   ): ISendEmailOptions {
     // ! temp. solution with hardcoded url
-    const activateUrl = `http://localhost:3000/auth/activate-account?token=${activationToken}`;
+    const activateUrl = `http://localhost:3000/auth/account-activation?token=${activationToken}`;
 
     const emailOptions: ISendEmailOptions = {
       recipientAddress: staffMember.email,
